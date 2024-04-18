@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/Annotation_Tool_Main">
+        <file>Annotation_FIle.h</file>
+    </qresource>
+</RCC>
