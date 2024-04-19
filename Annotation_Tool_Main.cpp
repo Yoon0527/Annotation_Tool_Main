@@ -36,7 +36,7 @@ void Annotation_Tool_Main::init_info() {
 
     user_institution = "caimi";
     user_career = "3";
-    user_name = "test";
+    user_name = "test2";
 
     //user_path = './' + "/result/" + user_name + '/';
     user_path = ".\\result\\" + user_name;
@@ -81,13 +81,23 @@ void Annotation_Tool_Main::show_img(QString path) {
     if (!m_image.isNull()) {
         ui.lbl_image->setPixmap(m_image);
         ui.lbl_image->setScaledContents(true);
+        
     }
     else {
         qDebug() << "Failed to load image";
     }
 
-    ui.lbl_image->setPixmap(m_image);
-    ui.lbl_image->setScaledContents(true);
+    QStringList tmp = read_label_txt(user_path + "\\", fileName.toStdString());
+    if (tmp.size() != 0) {
+        QPixmap return_pixmap = make_pixmap(tmp, m_image);
+        ui.lbl_image->setPixmap(return_pixmap);
+        ui.lbl_image->setScaledContents(true);
+    }
+    else {
+        ui.lbl_image->setPixmap(m_image);
+        ui.lbl_image->setScaledContents(true);
+    }
+
 }
 
 void Annotation_Tool_Main::next_img() {
@@ -170,19 +180,22 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             int height = endPos.y() - startPoint.y();
             m_currentRect = QRect(startPoint, QSize(width, height));
 
-            //QPixmap pixmap = m_image;
-            //QPainter painter(&pixmap);
-            //painter.setPen(Qt::green);
-            //painter.drawRect(m_currentRect);
-            //ui.lbl_image->setPixmap(pixmap);
-            QStringList tmp = read_label_txt(label_path, fileName.toStdString());
-            QPixmap output_pixmap = draw_rectangles(m_image, tmp);
+            QPixmap pixmap = m_image;
+            QPainter painter(&pixmap);
+            painter.setPen(Qt::green);
+            painter.drawRect(m_currentRect);
+            ui.lbl_image->setPixmap(pixmap);
+            
+            //QPixmap output_pixmap = draw_rectangles(m_image, tmp);
 
         }
         else if (event->type() == QEvent::MouseButtonRelease && m_drawing) {
             m_drawing = false;
             m_rectangles.append(m_currentRect);
             make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
+            QStringList tmp = read_label_txt(label_path, fileName.toStdString());
+            QPixmap return_pixmap = make_pixmap(tmp, m_image);
+            ui.lbl_image->setPixmap(return_pixmap);
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);
@@ -204,25 +217,5 @@ QPoint Annotation_Tool_Main::mapToImageCoordinates(const QPoint& pos)
     }
     else {
         return QPoint();
-    }
-}
-
-QPixmap Annotation_Tool_Main::draw_rectangles(QPixmap input_pixmap, QStringList label_list) {
-    QPixmap pixmap = input_pixmap;
-    QPainter painter(&pixmap);
-    painter.setPen(Qt::green);
-    
-    if (label_list.size() == 0) {
-        return pixmap;
-    }
-    else if (label_list.size() == 1) {
-        QList coord = each_label(label_list);
-        QPoint start = QPoint(coord[0], coord[1]);
-        QRect rect_info = QRect(start, QSize(coord[2], coord[3]));
-        painter.drawRect(rect_info);
-        return pixmap;
-    }
-    else {
-        return pixmap;
     }
 }

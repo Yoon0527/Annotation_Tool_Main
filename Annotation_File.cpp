@@ -5,6 +5,8 @@
 #include <filesystem>
 #include<QStringList>
 #include<QDebug>
+#include<QPixmap>
+#include<QPainter>
 //#include<direct.h>
 
 void make_directory(std::string path, std::string mode, std::string filename) {
@@ -74,12 +76,24 @@ QStringList read_label_txt(std::string txt_path, std::string filename) {
     }
 }
 
-QList<int> each_label(QStringList label) {
-    QList<int> return_label;
 
-    for (auto iter = label.begin(); iter != label.end(); ++iter) {
-        QString tmp =  *iter;
-        return_label.append(tmp.toInt());
+QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap) {
+    QPixmap return_pixmap = input_pixmap;
+
+    for (int i = 0; i < input_label_list.size(); i++) {
+        QRect tmp_rect;
+        
+        int x = input_label_list[i].split(",")[0].toInt();
+        int y = input_label_list[i].split(",")[1].toInt();
+        int width = input_label_list[i].split(",")[2].toInt();
+        int height = input_label_list[i].split(",")[3].toInt();
+        
+        tmp_rect = QRect(QPoint(x, y), QSize(width, height));
+
+        QPainter painter(&return_pixmap);
+        painter.setPen(Qt::green);
+        painter.drawRect(tmp_rect);
     }
-    return return_label;
+
+    return return_pixmap;
 }

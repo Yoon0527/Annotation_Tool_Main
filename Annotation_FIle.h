@@ -14,4 +14,4 @@ void make_label_txt(std::string txt_path, std::string filename, QPoint startP, i
 void make_directory(string path, string mode, string filename);
 
 QStringList read_label_txt(std::string txt_path, std::string filename);
-QList<int> each_label(QStringList label);
+QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap);
