@@ -10,10 +10,11 @@
 #include<string>
 #include<QStringList>
 
+bool replaceLine_annotation(const std::string& fileName, string searchChar, const std::string& newContent);
 void make_label_txt(std::string txt_path, std::string filename, QPoint startP, int w, int h);
 void make_directory(string path, string mode, string filename);
 void make_info_txt(std::string info_path, QString filename, int width, int height, QStringList input_label_list);
-void replaceLine_annotation(const std::string& fileName, string searchChar, const std::string& newContent);
+
 //fstream search_line(fstream input_file, std::string find_string);
 
 QStringList read_label_txt(std::string txt_path, std::string filename);
