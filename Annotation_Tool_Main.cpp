@@ -1,4 +1,4 @@
-#include "Annotation_Tool_Main.h"
+ï»¿#include "Annotation_Tool_Main.h"
 #include"Annotation_FIle.h"
 //#include "CustomLabel.h"
 #include <QtGui/QPainter>
@@ -124,7 +124,7 @@ void Annotation_Tool_Main::prev_img() {
         QMessageBox::warning(this, "Warning", "This is the first image.");
     }
 }
-//¸¶¿ì½º·Î »ç°¢Çü ±×¸®±â ¿øº» ÄÚµå
+//ë§ˆìš°ìŠ¤ë¡œ ì‚¬ê°í˜• ê·¸ë¦¬ê¸° ì›ë³¸ ì½”ë“œ
 //bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
 //{
 //    string label_path = user_path + "\\";
@@ -182,7 +182,10 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
 
             QPixmap pixmap = m_image;
             QPainter painter(&pixmap);
-            painter.setPen(Qt::green);
+            QPen pen(Qt::green);
+            pen.setWidth(3);
+
+            painter.setPen(pen);
             painter.drawRect(m_currentRect);
             ui.lbl_image->setPixmap(pixmap);
             
@@ -196,6 +199,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             QStringList tmp = read_label_txt(label_path, fileName.toStdString());
             QPixmap return_pixmap = make_pixmap(tmp, m_image);
             ui.lbl_image->setPixmap(return_pixmap);
+            make_info_txt(user_path, fileName, m_currentRect.width(), m_currentRect.height(), tmp);
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);

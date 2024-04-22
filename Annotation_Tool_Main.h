@@ -54,7 +54,7 @@ protected:
     //void paintEvent(QPaintEvent* event) override;
     bool eventFilter(QObject* obj, QEvent* event);
     QPoint mapToImageCoordinates(const QPoint& pos);
-    QPixmap draw_rectangles(QPixmap pixmap, QStringList label_list);
+
 
 
 private slots:
