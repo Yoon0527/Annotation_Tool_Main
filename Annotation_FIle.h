@@ -14,6 +14,7 @@ bool replaceLine_annotation(const std::string& fileName, string searchChar, cons
 void make_label_txt(std::string txt_path, std::string filename, QPoint startP, int w, int h);
 void make_directory(string path, string mode, string filename);
 void make_info_txt(std::string info_path, QString filename, int width, int height, QStringList input_label_list);
+void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap);
 
 //fstream search_line(fstream input_file, std::string find_string);
 

@@ -7,6 +7,9 @@
 #include<QDebug>
 #include<QPixmap>
 #include<QPainter>
+#include<QBuffer>
+#include<QFile>
+#include<QIODevice>
 //#include<direct.h>
 
 #include"Annotation_Tool_Main.h"
@@ -205,4 +208,19 @@ QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap) {
     }
 
     return return_pixmap;
+}
+
+void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap) {
+    //std::string pixmap_save_path = txt_path + filename + "\\" + filename + ".png";
+    QString pixmap_save_path = QString::fromStdString(txt_path + filename + "\\" + filename + ".png");
+    QFile file(pixmap_save_path);
+
+    if (QFile::exists(pixmap_save_path)) {
+        return;
+    }
+    else {
+        QImage save_img = save_pixmap.toImage();
+        save_img.save(pixmap_save_path, "PNG");
+    }
+
 }

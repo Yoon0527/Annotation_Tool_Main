@@ -73,6 +73,7 @@ void Annotation_Tool_Main::show_img(QString path) {
     fileName = fileName_pre.split(".")[0];
     make_directory(user_path, "image", fileName.toStdString());
     m_image.load(file_path);
+    save_pixmap(user_path + "\\", fileName.toStdString(), m_image);
     //img.scaled(30, 30);
     //img.scaledToWidth(10);
     int w = m_image.width();
@@ -124,43 +125,7 @@ void Annotation_Tool_Main::prev_img() {
         QMessageBox::warning(this, "Warning", "This is the first image.");
     }
 }
-//마우스로 사각형 그리기 원본 코드
-//bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
-//{
-//    string label_path = user_path + "\\";
-//    if (obj == ui.lbl_image) {
-//        if (event->type() == QEvent::MouseButtonPress) {
-//            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-//            if (mouseEvent->button() == Qt::LeftButton) {
-//                startPoint = mapToImageCoordinates(mouseEvent->pos());
-//                m_drawing = true;
-//            }
-//        }
-//        else if (event->type() == QEvent::MouseMove && m_drawing) {
-//            QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-//            QPoint endPos = mapToImageCoordinates(mouseEvent->pos());
-//            int width = endPos.x() - startPoint.x();
-//            int height = endPos.y() - startPoint.y();
-//            m_currentRect = QRect(startPoint, QSize(width, height));
-//
-//            QPixmap pixmap = m_image;
-//            QPainter painter(&pixmap);
-//            painter.setPen(Qt::green);
-//            painter.drawRect(m_currentRect);
-//            ui.lbl_image->setPixmap(pixmap);
-//            
-//        }
-//        else if (event->type() == QEvent::MouseButtonRelease && m_drawing) {
-//            m_drawing = false;
-//            m_rectangles.append(m_currentRect);
-//            make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
-//        }
-//        
-//    }
-//    QStringList tmp = read_label_txt(label_path, fileName.toStdString());
-//    QList<int> return_label = each_label(tmp);
-//    return QMainWindow::eventFilter(obj, event);
-//}
+
 
 bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
 {
