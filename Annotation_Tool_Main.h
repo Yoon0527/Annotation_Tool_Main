@@ -14,9 +14,14 @@
 
 using namespace std;
 
-struct {
-    string label_num;
-
+struct Rect_info{
+    QString img_name;
+    QString img_shape;
+    QString label_number;
+    QString rect_coord;
+    QString writer_name;
+    QString user_institude;
+    QString career;
 };
 
 class Annotation_Tool_Main : public QMainWindow
@@ -27,6 +32,8 @@ public:
     Annotation_Tool_Main(QWidget *parent = nullptr);
     ~Annotation_Tool_Main();
     //explicit RubberBand(Shape s, QWidget* p = 0);
+
+    void change_list_info(QString label);
 
 private:
     Ui::Annotation_Tool_MainClass ui;
@@ -47,13 +54,15 @@ private:
     string user_path;
     QString fileName;
 
+    vector<Rect_info> rect_info;
+
+    
+
 protected:
-    //void mousePressEvent(QMouseEvent* event) override;
-    //void mouseMoveEvent(QMouseEvent* event) override;
-    //void mouseReleaseEvent(QMouseEvent* event) override;
-    //void paintEvent(QPaintEvent* event) override;
     bool eventFilter(QObject* obj, QEvent* event);
     QPoint mapToImageCoordinates(const QPoint& pos);
+    vector<Rect_info> read_info();
+    
 
 
 
@@ -64,5 +73,8 @@ private slots:
     void show_img(QString path);
     void next_img();
     void prev_img();
+
+    void onItemClicked(QListWidgetItem* item);
+    
 
 };

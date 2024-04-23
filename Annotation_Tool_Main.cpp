@@ -1,4 +1,6 @@
-﻿#include "Annotation_Tool_Main.h"
+﻿#pragma once
+
+#include "Annotation_Tool_Main.h"
 #include"Annotation_FIle.h"
 //#include "CustomLabel.h"
 #include <QtGui/QPainter>
@@ -7,6 +9,7 @@
 #include <iostream>
 #include<QMessageBox>
 #include<direct.h>
+
 
 
 Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
@@ -22,11 +25,9 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.btn_loadImg, SIGNAL(clicked()), this, SLOT(load_image()));
     connect(ui.btn_next, SIGNAL(clicked()), this, SLOT(next_img()));
     connect(ui.btn_prev, SIGNAL(clicked()), this, SLOT(prev_img()));
+    connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
     ui.lbl_image->installEventFilter(this);
-    //connect(ui.menuImage_Load, SIGNAL(clicked()), this, SLOT(load_image()));
-    
-    
 }
 
 Annotation_Tool_Main::~Annotation_Tool_Main()
@@ -68,6 +69,9 @@ void Annotation_Tool_Main::load_image() {
 }
 
 void Annotation_Tool_Main::show_img(QString path) {
+    ui.list_lbl->clear();
+    ui.list_info->clear();
+    string read_path = user_path + "\\Annotation_info.txt";
     QString file_path = path;
     QString fileName_pre = file_path.section("/", -1);
     fileName = fileName_pre.split(".")[0];
@@ -89,10 +93,15 @@ void Annotation_Tool_Main::show_img(QString path) {
     }
 
     QStringList tmp = read_label_txt(user_path + "\\", fileName.toStdString());
+    bool annotationFile_bool = (std::filesystem::exists(read_path)) ? true : false;
+
     if (tmp.size() != 0) {
         QPixmap return_pixmap = make_pixmap(tmp, m_image);
         ui.lbl_image->setPixmap(return_pixmap);
         ui.lbl_image->setScaledContents(true);
+        if(annotationFile_bool){
+            rect_info = read_info();
+        }
     }
     else {
         ui.lbl_image->setPixmap(m_image);
@@ -119,6 +128,7 @@ void Annotation_Tool_Main::prev_img() {
     if (img_count >= 0) {
         QString* first_path(&file_list[0]);
         Annotation_Tool_Main::show_img(*(first_path + img_count));
+
     }
     else {
         img_count = 0;
@@ -164,14 +174,17 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             QStringList tmp = read_label_txt(label_path, fileName.toStdString());
             QPixmap return_pixmap = make_pixmap(tmp, m_image);
             ui.lbl_image->setPixmap(return_pixmap);
-            make_info_txt(user_path, fileName, m_currentRect.width(), m_currentRect.height(), tmp);
+            make_info_txt(user_path, fileName, m_currentRect.width(), m_currentRect.height(), tmp, user_name, user_institution, user_career);
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);
         //QPixmap output_pixmap = draw_rectangles(m_image, tmp);
     }
     
-    
+    //bool annotationFile_bool = (std::filesystem::exists(user_path + "\\Annotation_info.txt")) ? true : false;
+    //if (annotationFile_bool) {
+    //    rect_info = read_info();
+    //}
     return QMainWindow::eventFilter(obj, event);
 }
 
@@ -188,3 +201,71 @@ QPoint Annotation_Tool_Main::mapToImageCoordinates(const QPoint& pos)
         return QPoint();
     }
 }
+
+vector<Rect_info> Annotation_Tool_Main::read_info() {
+    vector<Rect_info> return_list;
+    string read_path = user_path +"\\Annotation_info.txt";
+    QString target_sentence;
+    string line;
+    bool found = false;
+
+    string img_name = fileName.toStdString();
+
+    std::ifstream annotation_info(read_path);
+
+    while (std::getline(annotation_info, line)) {
+        if (line.find(img_name) != std::string::npos) {
+            target_sentence = QString::fromStdString(line);
+        }
+    }
+
+    annotation_info.close();
+
+    QStringList split_list = target_sentence.split(",");
+    QStringList label_list = split_list[2].split(":");
+    QStringList coord_list = split_list[3].split(":");
+    int label_count = label_list.size();
+
+    if (label_count > 1) {
+        for (int i = 0; i < label_count; i++) {
+            Rect_info each_rect;
+
+            each_rect.img_name = split_list[0];
+            each_rect.img_shape = split_list[1];
+            each_rect.label_number = label_list[i];
+            each_rect.rect_coord = coord_list[i];
+            each_rect.writer_name = split_list[4];
+            each_rect.user_institude = split_list[5];
+            each_rect.career = split_list[6];
+
+            
+            return_list.push_back(each_rect);
+        }
+        ui.list_lbl->addItems(label_list);
+    }
+
+
+
+
+    return return_list;
+}
+
+void Annotation_Tool_Main::change_list_info(QString label) {
+    QString label_num = label.split("_")[1];
+    int index = label_num.toInt();
+    ui.list_info->clear();
+    ui.list_info->addItem(rect_info[index].img_name);
+    ui.list_info->addItem(rect_info[index].img_shape);
+    ui.list_info->addItem(rect_info[index].rect_coord);
+    ui.list_info->addItem(rect_info[index].writer_name);
+    ui.list_info->addItem(rect_info[index].user_institude);
+    ui.list_info->addItem(rect_info[index].career);
+
+
+}
+
+void Annotation_Tool_Main::onItemClicked(QListWidgetItem* item) {
+    QString select_label = item->text();
+    change_list_info(select_label);
+}
+

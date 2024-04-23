@@ -1,4 +1,5 @@
-﻿#include <QRect>
+﻿#pragma once
+#include <QRect>
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -13,6 +14,7 @@
 //#include<direct.h>
 
 #include"Annotation_Tool_Main.h"
+
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent) {
     vector<std::string> tmp_list;
     // 파일 열기
@@ -120,7 +122,7 @@ void make_label_txt(std::string txt_path, std::string filename, QPoint startP, i
     }
 }
 
-void make_info_txt(std::string info_path, QString filename, int width, int height, QStringList input_label_list) {
+void make_info_txt(std::string info_path, QString filename, int width, int height, QStringList input_label_list, string user, string institude, string career) {
     std::fstream annotation_info;
     std::string save_path = info_path + "\\Annotation_info.txt";
     QString save_sentence = filename + "," + QString::number(width) + " " + QString::number(height) + ",";
@@ -142,6 +144,9 @@ void make_info_txt(std::string info_path, QString filename, int width, int heigh
 
     save_sentence.append(coord_info);
     save_sentence.append(label_info);
+    save_sentence.append(user + ",");
+    save_sentence.append(institude + ",");
+    save_sentence.append(career + ",");
 
     std::string string_filename = filename.toStdString();
 
