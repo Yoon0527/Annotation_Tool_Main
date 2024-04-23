@@ -76,5 +76,5 @@ private slots:
 
     void onItemClicked(QListWidgetItem* item);
     
-
+    void delete_label();
 };

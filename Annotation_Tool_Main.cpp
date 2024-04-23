@@ -25,6 +25,8 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.btn_loadImg, SIGNAL(clicked()), this, SLOT(load_image()));
     connect(ui.btn_next, SIGNAL(clicked()), this, SLOT(next_img()));
     connect(ui.btn_prev, SIGNAL(clicked()), this, SLOT(prev_img()));
+    connect(ui.btn_delLabel, SIGNAL(clicked()), this, SLOT(delete_label()));
+
     connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
     ui.lbl_image->installEventFilter(this);
@@ -226,7 +228,7 @@ vector<Rect_info> Annotation_Tool_Main::read_info() {
     QStringList coord_list = split_list[3].split(":");
     int label_count = label_list.size();
 
-    if (label_count > 1) {
+    if (label_count >= 1) {
         for (int i = 0; i < label_count; i++) {
             Rect_info each_rect;
 
@@ -267,5 +269,11 @@ void Annotation_Tool_Main::change_list_info(QString label) {
 void Annotation_Tool_Main::onItemClicked(QListWidgetItem* item) {
     QString select_label = item->text();
     change_list_info(select_label);
+}
+
+void Annotation_Tool_Main::delete_label() {
+    //list_lbl의 currentItem을 QString으로 받고,
+    //해당 라벨을 annotation_info.txt에서 삭제
+    //annotation_txt를 다시 읽기.
 }
 
