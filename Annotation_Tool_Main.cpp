@@ -82,8 +82,8 @@ void Annotation_Tool_Main::show_img(QString path) {
     save_pixmap(user_path + "\\", fileName.toStdString(), m_image);
     //img.scaled(30, 30);
     //img.scaledToWidth(10);
-    int w = m_image.width();
-    int h = m_image.height();
+    img_w = m_image.width();
+    img_h = m_image.height();
 
     if (!m_image.isNull()) {
         ui.lbl_image->setPixmap(m_image);
@@ -102,7 +102,10 @@ void Annotation_Tool_Main::show_img(QString path) {
         ui.lbl_image->setPixmap(return_pixmap);
         ui.lbl_image->setScaledContents(true);
         if(annotationFile_bool){
-            rect_info = read_info();
+            bool rect_result = read_info();
+            if (!rect_result) {
+                rect_info.clear();
+            }
         }
     }
     else {
@@ -204,13 +207,13 @@ QPoint Annotation_Tool_Main::mapToImageCoordinates(const QPoint& pos)
     }
 }
 
-vector<Rect_info> Annotation_Tool_Main::read_info() {
-    vector<Rect_info> return_list;
+bool Annotation_Tool_Main::read_info() {
+    //vector<Rect_info> return_vec;
     string read_path = user_path +"\\Annotation_info.txt";
     QString target_sentence;
     string line;
     bool found = false;
-
+    rect_info.clear();
     string img_name = fileName.toStdString();
 
     std::ifstream annotation_info(read_path);
@@ -218,38 +221,44 @@ vector<Rect_info> Annotation_Tool_Main::read_info() {
     while (std::getline(annotation_info, line)) {
         if (line.find(img_name) != std::string::npos) {
             target_sentence = QString::fromStdString(line);
+            found = true;
         }
     }
+    if (found) {
+        annotation_info.close();
 
-    annotation_info.close();
+        QStringList split_list = target_sentence.split(",");
+        QStringList label_list = split_list[2].split(":");
+        QStringList coord_list = split_list[3].split(":");
+        int label_count = label_list.size();
 
-    QStringList split_list = target_sentence.split(",");
-    QStringList label_list = split_list[2].split(":");
-    QStringList coord_list = split_list[3].split(":");
-    int label_count = label_list.size();
+        if (label_count >= 1) {
+            for (int i = 0; i < label_count; i++) {
+                Rect_info each_rect;
 
-    if (label_count >= 1) {
-        for (int i = 0; i < label_count; i++) {
-            Rect_info each_rect;
+                each_rect.img_name = split_list[0];
+                each_rect.img_shape = split_list[1];
+                each_rect.label_number = label_list[i];
+                each_rect.rect_coord = coord_list[i];
+                each_rect.writer_name = split_list[4];
+                each_rect.user_institude = split_list[5];
+                each_rect.career = split_list[6];
 
-            each_rect.img_name = split_list[0];
-            each_rect.img_shape = split_list[1];
-            each_rect.label_number = label_list[i];
-            each_rect.rect_coord = coord_list[i];
-            each_rect.writer_name = split_list[4];
-            each_rect.user_institude = split_list[5];
-            each_rect.career = split_list[6];
 
-            
-            return_list.push_back(each_rect);
+                rect_info.push_back(each_rect);
+            }
+            ui.list_lbl->addItems(label_list);
         }
-        ui.list_lbl->addItems(label_list);
+
+
+
+
+        return found;
     }
-
-
-
-
-    return return_list;
+    else {
+        return found;
+    }
+    
 }
 
 void Annotation_Tool_Main::change_list_info(QString label) {
@@ -275,5 +284,66 @@ void Annotation_Tool_Main::delete_label() {
     //list_lbl의 currentItem을 QString으로 받고,
     //해당 라벨을 annotation_info.txt에서 삭제
     //annotation_txt를 다시 읽기.
+
+    QListWidgetItem* select_item = ui.list_lbl->currentItem();
+    QString select = select_item->text();
+    //ui.list_lbl->setCurrentItem(nullptr);
+    int row = ui.list_lbl->currentRow();
+    delete ui.list_lbl->takeItem(row);
+    //select_item->setSelected(false);
+    change_txt(rect_info, select);
+}
+
+void Annotation_Tool_Main::change_txt(vector<Rect_info> input_vec, QString select_label) {
+    string read_path = user_path + "\\Annotation_info.txt";
+    string label_txt = user_path + "\\" + fileName.toStdString() +"\\" + fileName.toStdString() +".txt";
+    QString save_sentence;
+    QString label_;
+    QString coord_;
+    
+    int find_num = select_label.split("_")[1].toInt();
+
+    input_vec.erase(input_vec.begin() + find_num);
+    int vec_size = input_vec.size();
+    if (vec_size > 0) {
+        save_sentence.append(fileName + "," + QString::number(img_w) + " " + QString::number(img_h) + ",");
+
+        std::ofstream label_coord(label_txt);
+
+        for (int i = 0; i < vec_size; i++) {
+            if (i == vec_size - 1) {
+                label_.append(QString("label_%1,").arg(i));
+                coord_.append(input_vec[i].rect_coord + ",");
+            }
+            else {
+                label_.append(QString("label_%1:").arg(i));
+                coord_.append(input_vec[i].rect_coord + ":");
+            }
+            label_coord << input_vec[i].rect_coord.toStdString() << "\n";
+        }
+
+        label_coord.close();
+
+        save_sentence.append(label_);
+        save_sentence.append(coord_);
+
+        save_sentence.append(user_name + ",");
+        save_sentence.append(user_institution + ",");
+        save_sentence.append(user_career + ",");
+    }
+    else {
+        //save_sentence.append(fileName + ",");
+        std::ofstream label_coord(label_txt);
+        label_coord << "";
+        label_coord.close();
+        save_sentence.append("");
+    }
+
+    bool change_result = replaceLine_annotation(read_path, fileName.toStdString(), save_sentence.toStdString());
+
+    show_img(*(&file_list[0] + img_count));
+
+    //ui.list_info->addItem(label_);
+    //ui.list_info->addItem(coord_);
 }
 

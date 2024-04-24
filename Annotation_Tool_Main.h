@@ -34,6 +34,7 @@ public:
     //explicit RubberBand(Shape s, QWidget* p = 0);
 
     void change_list_info(QString label);
+    void change_txt(vector<Rect_info> input_vec, QString select_label);
 
 private:
     Ui::Annotation_Tool_MainClass ui;
@@ -46,7 +47,8 @@ private:
     QStringList* ptr = &file_list;
     int file_list_len;
     int img_count = 0;
-
+    int img_w;
+    int img_h;
     string user_name;
     string user_career;
     string user_institution;
@@ -61,7 +63,7 @@ private:
 protected:
     bool eventFilter(QObject* obj, QEvent* event);
     QPoint mapToImageCoordinates(const QPoint& pos);
-    vector<Rect_info> read_info();
+    bool read_info();
     
 
 
