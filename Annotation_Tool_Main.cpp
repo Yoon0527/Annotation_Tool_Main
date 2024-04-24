@@ -180,7 +180,8 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             QPixmap return_pixmap = make_pixmap(tmp, m_image);
             ui.lbl_image->setPixmap(return_pixmap);
             make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
-            
+            ui.list_lbl->clear();
+            bool result = read_info();
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);
