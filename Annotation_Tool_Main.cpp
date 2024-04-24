@@ -26,7 +26,7 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.btn_next, SIGNAL(clicked()), this, SLOT(next_img()));
     connect(ui.btn_prev, SIGNAL(clicked()), this, SLOT(prev_img()));
     connect(ui.btn_delLabel, SIGNAL(clicked()), this, SLOT(delete_label()));
-
+    connect(ui.btn_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
     ui.lbl_image->installEventFilter(this);
