@@ -39,9 +39,12 @@ public:
 private:
     Ui::Annotation_Tool_MainClass ui;
     QPixmap m_image;
+    QPixmap return_pixmap;
+    QPixmap current_pixmap;
     QRect m_currentRect;
     QVector<QRect> m_rectangles;
     bool m_drawing;
+    bool rect_result;
     QPoint startPoint;
     QStringList file_list;
     QStringList* ptr = &file_list;
@@ -79,4 +82,6 @@ private slots:
     void onItemClicked(QListWidgetItem* item);
     
     void delete_label();
+
+    void adjustBrightness(int value);
 };
