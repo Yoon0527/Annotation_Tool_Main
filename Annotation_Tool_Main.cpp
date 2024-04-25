@@ -26,7 +26,7 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.btn_next, SIGNAL(clicked()), this, SLOT(next_img()));
     connect(ui.btn_prev, SIGNAL(clicked()), this, SLOT(prev_img()));
     connect(ui.btn_delLabel, SIGNAL(clicked()), this, SLOT(delete_label()));
-    connect(ui.btn_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
+    //connect(ui.btn_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
     ui.lbl_image->installEventFilter(this);
@@ -72,7 +72,12 @@ void Annotation_Tool_Main::load_image() {
 
 void Annotation_Tool_Main::show_img(QString path) {
     ui.list_lbl->clear();
-    ui.list_info->clear();
+    ui.line_inputfile->clear();
+    ui.line_inputshape->clear();
+    ui.line_inputcoord->clear();
+    ui.line_inputname->clear();
+    ui.line_inputinstitude->clear();
+    ui.line_inputcareer->clear();
     string read_path = user_path + "\\Annotation_info.txt";
     QString file_path = path;
     QString fileName_pre = file_path.section("/", -1);
@@ -268,13 +273,20 @@ bool Annotation_Tool_Main::read_info() {
 void Annotation_Tool_Main::change_list_info(QString label) {
     QString label_num = label.split("_")[1];
     int index = label_num.toInt();
-    ui.list_info->clear();
-    ui.list_info->addItem(rect_info[index].img_name);
-    ui.list_info->addItem(rect_info[index].img_shape);
-    ui.list_info->addItem(rect_info[index].rect_coord);
-    ui.list_info->addItem(rect_info[index].writer_name);
-    ui.list_info->addItem(rect_info[index].user_institude);
-    ui.list_info->addItem(rect_info[index].career);
+    ui.line_inputfile->clear();
+    ui.line_inputshape->clear();
+    ui.line_inputcoord->clear();
+    ui.line_inputname->clear();
+    ui.line_inputinstitude->clear();
+    ui.line_inputcareer->clear();
+
+
+    ui.line_inputfile->setText(rect_info[index].img_name);
+    ui.line_inputshape->setText(rect_info[index].img_shape);
+    ui.line_inputcoord->setText(rect_info[index].rect_coord);
+    ui.line_inputname->setText(rect_info[index].writer_name);
+    ui.line_inputinstitude->setText(rect_info[index].user_institude);
+    ui.line_inputcareer->setText(rect_info[index].career);
 
 
 }
