@@ -47,6 +47,7 @@ private:
     bool rect_result;
     QPoint startPoint;
     QStringList file_list;
+    QStringList tmp;
     QStringList* ptr = &file_list;
     int file_list_len;
     int img_count = 0;

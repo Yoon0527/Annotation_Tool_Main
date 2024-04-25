@@ -200,7 +200,7 @@ QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap) {
 
         QPainter painter(&return_pixmap);
         QPen pen(Qt::green);
-        pen.setWidth(3);
+        pen.setWidth(1);
         painter.setPen(pen);
         painter.drawRect(tmp_rect);
 

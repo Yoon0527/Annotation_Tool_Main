@@ -41,7 +41,7 @@ void Annotation_Tool_Main::adjustBrightness(int value)
 {
     QPixmap originalPixmap;
 
-    if (rect_result) {
+    if (tmp.size() != 0) {
         originalPixmap = return_pixmap.copy();
     }
     else {
@@ -49,7 +49,7 @@ void Annotation_Tool_Main::adjustBrightness(int value)
     }
 
     QPixmap adjustedPixmap = originalPixmap;
-    QImage adjustedImage = adjustedPixmap.toImage();
+    QImage adjustedImage = originalPixmap.toImage();
     qreal brightnessFactor = (100 + value) / 100.0;
     QColor color;
     for (int y = 0; y < adjustedImage.height(); ++y) {
@@ -62,7 +62,7 @@ void Annotation_Tool_Main::adjustBrightness(int value)
         }
     }
     adjustedPixmap = QPixmap::fromImage(adjustedImage);
-
+    //current_pixmap = adjustedPixmap;
     string read_path = user_path + "\\Annotation_info.txt";
     QStringList tmp = read_label_txt(user_path + "\\", fileName.toStdString());
     bool annotationFile_bool = (std::filesystem::exists(read_path)) ? true : false;
@@ -83,6 +83,7 @@ void Annotation_Tool_Main::adjustBrightness(int value)
         ui.lbl_image->setPixmap(adjustedPixmap);
         ui.lbl_image->setScaledContents(true);
         current_pixmap = adjustedPixmap;
+        
     }
 
     // Update the label with adjusted pixmap
@@ -153,11 +154,12 @@ void Annotation_Tool_Main::show_img(QString path) {
         qDebug() << "Failed to load image";
     }
 
-    QStringList tmp = read_label_txt(user_path + "\\", fileName.toStdString());
+    tmp = read_label_txt(user_path + "\\", fileName.toStdString());
     bool annotationFile_bool = (std::filesystem::exists(read_path)) ? true : false;
 
     if (tmp.size() != 0) {
         return_pixmap = make_pixmap(tmp, m_image);
+        current_pixmap = return_pixmap.copy();
         ui.lbl_image->setPixmap(return_pixmap);
         ui.lbl_image->setScaledContents(true);
         if(annotationFile_bool){
@@ -170,6 +172,7 @@ void Annotation_Tool_Main::show_img(QString path) {
     else {
         ui.lbl_image->setPixmap(m_image);
         ui.lbl_image->setScaledContents(true);
+        current_pixmap = m_image.copy();
     }
 
 }
@@ -223,7 +226,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             QPixmap pixmap = current_pixmap;
             QPainter painter(&pixmap);
             QPen pen(Qt::green);
-            pen.setWidth(3);
+            pen.setWidth(1);
 
             painter.setPen(pen);
             painter.drawRect(m_currentRect);
