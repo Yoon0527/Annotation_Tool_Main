@@ -126,6 +126,7 @@ void Annotation_Tool_Main::load_image() {
 }
 
 void Annotation_Tool_Main::show_img(QString path) {
+    ui.lbl_image->setFocus();
     ui.list_lbl->clear();
     ui.line_inputfile->clear();
     ui.line_inputshape->clear();
@@ -419,5 +420,20 @@ void Annotation_Tool_Main::change_txt(vector<Rect_info> input_vec, QString selec
 
     //ui.list_info->addItem(label_);
     //ui.list_info->addItem(coord_);
+}
+
+void Annotation_Tool_Main::keyPressEvent(QKeyEvent* event) {
+    switch (event->key()) {
+    case Qt::Key_Right:
+    case Qt::Key_Space:
+        next_img();
+        break;
+    case Qt::Key_Left:
+        prev_img();
+        break;
+    default:
+        Annotation_Tool_Main::keyPressEvent(event);
+        break;
+    }
 }
 
