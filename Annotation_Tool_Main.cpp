@@ -9,7 +9,7 @@
 #include <iostream>
 #include<QMessageBox>
 #include<direct.h>
-
+#include<cstdlib>
 
 
 Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
@@ -30,6 +30,8 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
     connect(ui.sl_imgBrightness, &QSlider::valueChanged, this, &Annotation_Tool_Main::adjustBrightness);
+    connect(ui.list_image, &QListWidget::itemDoubleClicked, this, &Annotation_Tool_Main::image_move);
+
 
     ui.lbl_image->installEventFilter(this);
 }
@@ -108,7 +110,13 @@ void Annotation_Tool_Main::init_info() {
 void Annotation_Tool_Main::load_image() {
     QFileDialog dlg;
     file_list = dlg.getOpenFileNames(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
-    
+
+    for (int i = 0; i < file_list.size(); i++) {
+        QString fileName_pre = file_list[i].section("/", -1);
+        file_name_list.append(fileName_pre.split(".")[0]);
+    }
+
+    ui.list_image->addItems(file_name_list);
     //int size = file_list.length();
 
     file_list_len = file_list.size();
@@ -435,5 +443,18 @@ void Annotation_Tool_Main::keyPressEvent(QKeyEvent* event) {
         Annotation_Tool_Main::keyPressEvent(event);
         break;
     }
+}
+
+void Annotation_Tool_Main::image_move() {
+    int img_num = ui.list_image->currentItem()->text().toInt() - 1;
+    int num_between = abs(img_count - img_num);
+    if (img_count > img_num) {
+        img_count -= num_between;
+    }
+    else if(img_count < img_num){
+        img_count += num_between;
+    }
+    QString* first_path(&file_list[0]);
+    Annotation_Tool_Main::show_img(*(first_path + img_count));
 }
 

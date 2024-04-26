@@ -48,6 +48,7 @@ private:
     bool rect_result;
     QPoint startPoint;
     QStringList file_list;
+    QStringList file_name_list;
     QStringList tmp;
     QStringList* ptr = &file_list;
     int file_list_len;
@@ -88,4 +89,5 @@ private slots:
     void delete_label();
 
     void adjustBrightness(int value);
+    void image_move();
 };
