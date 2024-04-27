@@ -51,13 +51,15 @@
     <ClInclude Include="Annotation_FIle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Annotation_Tool_login.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Annotation_Tool_login.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Annotation_Tool_login.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

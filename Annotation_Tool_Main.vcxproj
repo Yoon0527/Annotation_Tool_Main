@@ -105,7 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation_FIle.h" />
-    <ClInclude Include="Annotation_Tool_login.h" />
+    <QtMoc Include="Annotation_Tool_login.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
