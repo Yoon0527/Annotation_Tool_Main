@@ -95,14 +95,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="Annotation_Tool_Main.qrc" />
+    <QtUic Include="Annotation_Tool_login.ui" />
     <QtUic Include="Annotation_Tool_Main.ui" />
     <QtMoc Include="Annotation_Tool_Main.h" />
     <ClCompile Include="Annotation_File.cpp" />
+    <ClCompile Include="Annotation_Tool_login.cpp" />
     <ClCompile Include="Annotation_Tool_Main.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation_FIle.h" />
+    <ClInclude Include="Annotation_Tool_login.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

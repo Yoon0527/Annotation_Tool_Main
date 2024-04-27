@@ -43,10 +43,21 @@
     <ClCompile Include="Annotation_File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Annotation_Tool_login.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation_FIle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Annotation_Tool_login.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="Annotation_Tool_login.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>
