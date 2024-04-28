@@ -29,7 +29,8 @@ class Annotation_Tool_Main : public QMainWindow
     Q_OBJECT
 
 public:
-    Annotation_Tool_Main(QWidget *parent = nullptr);
+    //Annotation_Tool_Main(QWidget *parent = nullptr);
+    Annotation_Tool_Main(QWidget* parent = nullptr);
     ~Annotation_Tool_Main();
     //explicit RubberBand(Shape s, QWidget* p = 0);
 
@@ -74,7 +75,8 @@ protected:
     //void keyPressEvent(QKeyEvent* event);
     
 
-
+public slots:
+    void receiveLoginInfo(const QString& login_name, const QString& login_institude, const QString login_career);
 
 private slots:
     //QStringList load_image();
@@ -90,4 +92,6 @@ private slots:
 
     void adjustBrightness(int value);
     void image_move();
+
+    
 };

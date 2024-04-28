@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "Annotation_Tool_Main.h"
+#include"Annotation_Tool_login.h"
 #include"Annotation_FIle.h"
+#include"globals.h"
 //#include "CustomLabel.h"
 #include <QtGui/QPainter>
 #include <QtGui/QPen>
@@ -94,9 +96,9 @@ void Annotation_Tool_Main::adjustBrightness(int value)
 
 void Annotation_Tool_Main::init_info() {
 
-    user_institution = "caimi";
-    user_career = "3";
-    user_name = "test2";
+    user_institution = global_login_institude.toStdString();
+    user_career = global_login_career.toStdString();
+    user_name = global_login_name.toStdString();
 
     //user_path = './' + "/result/" + user_name + '/';
     user_path = ".\\result\\" + user_name;
@@ -458,3 +460,8 @@ void Annotation_Tool_Main::image_move() {
     Annotation_Tool_Main::show_img(*(first_path + img_count));
 }
 
+void Annotation_Tool_Main::receiveLoginInfo(const QString& login_name, const QString& login_institude, const QString login_career) {
+    user_name = login_name.toStdString();
+    user_institution = login_institude.toStdString();
+    user_career = login_career.toStdString();
+}
