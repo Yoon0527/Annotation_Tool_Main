@@ -11,6 +11,7 @@
 #include<QBuffer>
 #include<QFile>
 #include<QIODevice>
+//#include<QtXlsx>
 //#include<direct.h>
 
 #include"Annotation_Tool_Main.h"
@@ -242,5 +243,50 @@ void write_log(QString log_sentence) {
         log_txt.open(log_path, std::ios::out);
         log_txt << log_sentence.toStdString() << "\n";
         log_txt.close();
+    }
+}
+
+void save_xlsx() {
+    std::string csv_path = ".\\result\\" + global_login_name.toStdString() + "\\Annotaion_Information.csv";
+    std::string annotation_path = ".\\result\\" + global_login_name.toStdString() + "\\annotation_info.txt";
+    std::string read_sentence;
+
+    vector<string> label_list;
+    vector<string> coord_list;
+
+    std::string line;
+
+    std::string img_name;
+    std::string img_shape;
+    QStringList label_list_str;
+    QStringList coord_list_str;
+    std::string user_name;
+    std::string user_insti;
+    std::string user_career;
+
+
+    if (std::filesystem::exists(annotation_path)) {
+        std::fstream annotation_file(annotation_path);
+        std::fstream csv_file(csv_path);
+        while (std::getline(annotation_file, line)) {
+            QStringList line_q = QString::fromStdString(line).split(",");
+            img_name = line_q[0].toStdString();
+            img_shape = line_q[1].toStdString();
+            label_list_str = line_q[2].split(":");
+            coord_list_str = line_q[3].split(":");
+            user_name = line_q[4].toStdString();
+            user_insti = line_q[5].toStdString();
+            user_career = line_q[6].toStdString();
+
+            for (int i = 0; i < label_list_str.size(); i++) {
+                if (csv_file.is_open()) {
+                    csv_file << img_name + "," +img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + label_list_str[i].toStdString() + "," + coord_list_str[i].toStdString() << std::endl;
+                }
+            }
+            
+
+        }
+        csv_file.close();
+        annotation_file.close();
     }
 }

@@ -93,5 +93,7 @@ private slots:
     void adjustBrightness(int value);
     void image_move();
 
+    void save_excel();
+
     
 };
