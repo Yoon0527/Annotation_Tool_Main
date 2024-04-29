@@ -278,6 +278,8 @@ void save_xlsx() {
             user_insti = line_q[5].toStdString();
             user_career = line_q[6].toStdString();
 
+            csv_file.open(csv_path, std::ios::app);
+            csv_file << "파일명," << "파일 크기," << "작성자," << "소속," << "라벨," << "좌표" << std::endl;
             for (int i = 0; i < label_list_str.size(); i++) {
                 if (csv_file.is_open()) {
                     csv_file << img_name + "," +img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + label_list_str[i].toStdString() + "," + coord_list_str[i].toStdString() << std::endl;
