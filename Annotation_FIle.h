@@ -16,7 +16,7 @@ void make_label_txt(std::string txt_path, std::string filename, QPoint startP, i
 void make_directory(std::string path, std::string mode, std::string filename);
 void make_info_txt(std::string info_path, QString filename, int width, int height, QStringList input_label_list, std::string user, std::string institude, std::string career);
 void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap);
-
+void write_log(QString log_sentence);
 //fstream search_line(fstream input_file, std::string find_string);
 
 QStringList read_label_txt(std::string txt_path, std::string filename);

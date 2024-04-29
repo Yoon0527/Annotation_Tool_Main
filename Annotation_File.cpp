@@ -14,7 +14,7 @@
 //#include<direct.h>
 
 #include"Annotation_Tool_Main.h"
-
+#include"globals.h"
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent) {
     vector<std::string> tmp_list;
     // 파일 열기
@@ -228,4 +228,19 @@ void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap
         save_img.save(pixmap_save_path, "PNG");
     }
 
+}
+
+void write_log(QString log_sentence) {
+    std::fstream log_txt;
+    std::string log_path = ".\\result\\" + global_login_name.toStdString() + "\\log.txt";
+    if (std::filesystem::exists(log_path)) {
+        log_txt.open(log_path, std::ios::app);
+        log_txt << log_sentence.toStdString() << "\n";
+        log_txt.close();
+    }
+    else {
+        log_txt.open(log_path, std::ios::out);
+        log_txt << log_sentence.toStdString() << "\n";
+        log_txt.close();
+    }
 }

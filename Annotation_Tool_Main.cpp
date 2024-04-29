@@ -104,9 +104,17 @@ void Annotation_Tool_Main::init_info() {
     user_path = ".\\result\\" + user_name;
     make_directory(user_path, "root", "");
 
-    ui.lbl_institution->setText(QString::fromStdString(user_institution));
-    ui.lbl_career->setText(QString::fromStdString(user_career));
-    ui.lbl_name->setText(QString::fromStdString(user_name));
+    //ui.lbl_institution->setText(QString::fromStdString(user_institution));
+    //ui.lbl_career->setText(QString::fromStdString(user_career));
+    //ui.lbl_name->setText(QString::fromStdString(user_name));
+
+    ui.list_log->addItem("Log in Complete.");
+    ui.list_log->addItem(QString("User: " + global_login_name));
+    ui.list_log->addItem(QString("Institution: " + global_login_institude));
+    ui.list_log->addItem(QString("Career: " + global_login_career));
+    write_log(QString("User: " + global_login_name));
+    write_log(QString("Institution: " + global_login_institude));
+    write_log(QString("Career: " + global_login_career));
 }
 
 void Annotation_Tool_Main::load_image() {
@@ -122,10 +130,11 @@ void Annotation_Tool_Main::load_image() {
     //int size = file_list.length();
 
     file_list_len = file_list.size();
-    //file_list_len = QString::number(list_len);
+    QString file_size = QString::number(file_list_len);
     //ui.list_info->addItem("length: " + len);
     Annotation_Tool_Main::show_img(file_list[0]);
-    
+    write_log(QString(file_size + " Images Load"));
+    ui.list_log->addItem(QString(file_size + " Images Load"));
     //QString fileName = filepath.section("/", -1);
     //ui.lbl_image->setText(fileName);
 
