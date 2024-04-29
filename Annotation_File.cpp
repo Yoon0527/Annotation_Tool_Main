@@ -263,11 +263,16 @@ void save_xlsx() {
     std::string user_name;
     std::string user_insti;
     std::string user_career;
+    std::fstream annotation_file(annotation_path);
+    std::fstream csv_file_header(csv_path);
+    std::fstream csv_file_data(csv_path);
 
+    csv_file_header.open(csv_path, std::ios::out);
+    csv_file_header << "파일명," << "파일 크기," << "작성자," << "소속," << "경력," << "라벨," << "좌표" << std::endl;
+    csv_file_header.close();
 
     if (std::filesystem::exists(annotation_path)) {
-        std::fstream annotation_file(annotation_path);
-        std::fstream csv_file(csv_path);
+        csv_file_data.open(csv_path, std::ios::app);
         while (std::getline(annotation_file, line)) {
             QStringList line_q = QString::fromStdString(line).split(",");
             img_name = line_q[0].toStdString();
@@ -278,17 +283,18 @@ void save_xlsx() {
             user_insti = line_q[5].toStdString();
             user_career = line_q[6].toStdString();
 
-            csv_file.open(csv_path, std::ios::out);
-            csv_file << "파일명," << "파일 크기," << "작성자," << "소속," << "경력," << "라벨," << "좌표" << std::endl;
+            
             for (int i = 0; i < label_list_str.size(); i++) {
-                if (csv_file.is_open()) {
-                    csv_file << img_name + "," +img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + label_list_str[i].toStdString() + "," + coord_list_str[i].toStdString() << std::endl;
+                if (csv_file_data.is_open()) {
+                    std::string input_coord = "\"" + coord_list_str[i].toStdString() + "\"";
+                    std::string input_label = "\"" + label_list_str[i].toStdString() + "\"";
+                    std::string save_s = img_name + "," + img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord;
+                    csv_file_data << img_name + "," +img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord << std::endl;
                 }
             }
-            
-
         }
-        csv_file.close();
-        annotation_file.close();
     }
+    csv_file_data.close();
+    annotation_file.close();
 }
+
