@@ -77,12 +77,6 @@ void Annotation_Tool_Main::adjustBrightness(int value)
         ui.lbl_image->setPixmap(new_pixmap);
         ui.lbl_image->setScaledContents(true);
         current_pixmap = new_pixmap;
-        //if (annotationFile_bool) {
-        //    rect_result = read_info();
-        //    if (!rect_result) {
-        //        rect_info.clear();
-        //    }
-        //}
     }
     else {
         ui.lbl_image->setPixmap(adjustedPixmap);
@@ -91,8 +85,6 @@ void Annotation_Tool_Main::adjustBrightness(int value)
         
     }
 
-    // Update the label with adjusted pixmap
-    //ui.lbl_image->setPixmap(adjustedPixmap);
 }
 
 void Annotation_Tool_Main::init_info() {
@@ -105,10 +97,6 @@ void Annotation_Tool_Main::init_info() {
     user_path = ".\\result\\" + user_name;
     make_directory(user_path, "root", "");
 
-    //ui.lbl_institution->setText(QString::fromStdString(user_institution));
-    //ui.lbl_career->setText(QString::fromStdString(user_career));
-    //ui.lbl_name->setText(QString::fromStdString(user_name));
-
     ui.list_log->addItem("Log in Complete.");
     ui.list_log->addItem(QString("User: " + global_login_name));
     ui.list_log->addItem(QString("Institution: " + global_login_institude));
@@ -119,30 +107,56 @@ void Annotation_Tool_Main::init_info() {
 }
 
 void Annotation_Tool_Main::load_image() {
-    QFileDialog dlg;
-    file_list = dlg.getOpenFileNames(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
+    if (file_list.size() != 0) {
+        QStringList file_list_tmp = file_list;
+        QStringList differ_list;
 
-    for (int i = 0; i < file_list.size(); i++) {
-        QString fileName_pre = file_list[i].section("/", -1);
-        file_name_list.append(fileName_pre.split(".")[0]);
+        QFileDialog dlg;
+        file_list = dlg.getOpenFileNames(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
+
+        for (const QString& path : file_list) {
+            if (!file_list_tmp.contains(path)) {
+                differ_list.append(path);
+                file_list_tmp.append(path);
+            }
+        }
+
+        for (int i = 0; i < differ_list.size(); i++) {
+            QString fileName_pre = differ_list[i].section("/", -1);
+            file_name_list.append(fileName_pre.split(".")[0]);
+        }
+        ui.list_image->clear();
+        ui.list_image->addItems(file_name_list);
+        write_log(QString(QString::number(differ_list.size()) + " additional images have been loaded"));
+        ui.list_log->addItem(QString(QString::number(differ_list.size()) + " additional images have been loaded"));
+        file_list = file_list_tmp;
     }
+    else {
+        file_list.clear();
+        ui.list_image->clear();
 
-    ui.list_image->addItems(file_name_list);
-    //int size = file_list.length();
+        QFileDialog dlg;
+        file_list = dlg.getOpenFileNames(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
 
-    file_list_len = file_list.size();
-    QString file_size = QString::number(file_list_len);
-    //ui.list_info->addItem("length: " + len);
-    Annotation_Tool_Main::show_img(file_list[0]);
-    write_log(QString(file_size + " Images Load"));
-    ui.list_log->addItem(QString(file_size + " Images Load"));
-    //QString fileName = filepath.section("/", -1);
-    //ui.lbl_image->setText(fileName);
+        file_name_list.clear();
 
-    
-    //img.load(filepath);
+        for (int i = 0; i < file_list.size(); i++) {
+            QString fileName_pre = file_list[i].section("/", -1);
+            file_name_list.append(fileName_pre.split(".")[0]);
+        }
 
-    //return file_list;
+        ui.list_image->addItems(file_name_list);
+
+        file_list_len = file_list.size();
+        QString file_size = QString::number(file_list_len);
+
+        if (file_list.size() > 0) {
+            Annotation_Tool_Main::show_img(file_list[0]);
+        }
+        write_log(QString(file_size + " Images Load"));
+        ui.list_log->addItem(QString(file_size + " Images Load"));
+    }
+    //ui.list_image->sortItems();
 }
 
 void Annotation_Tool_Main::show_img(QString path) {
@@ -266,6 +280,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
             ui.list_lbl->clear();
             bool result = read_info();
+            write_log(QString("Draw Rect, "+ fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);

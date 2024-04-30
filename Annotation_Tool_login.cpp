@@ -7,10 +7,13 @@
 #include<QMessageBox>
 
 Annotation_Tool_login::Annotation_Tool_login(QWidget* parent)
-	:QDialog(parent) {
+	: QDialog(parent) 
+{
 	ui.setupUi(this);
-
-	
+	QPixmap logo;
+	logo.load("./imgs/caimi_logo.png");
+	ui.lbl_logo->setPixmap(logo);
+	ui.lbl_logo->setScaledContents(true);
 	connect(ui.btn_login, &QPushButton::clicked, this, &Annotation_Tool_login::on_loginButton_clicked);
 }
 
