@@ -246,61 +246,7 @@ void write_log(QString log_sentence) {
     }
 }
 
-//void save_xlsx() {
-//    std::string csv_path = ".\\result\\" + global_login_name.toStdString() + "\\Annotaion_Information.csv";
-//    std::string annotation_path = ".\\result\\" + global_login_name.toStdString() + "\\annotation_info.txt";
-//    std::string read_sentence;
-//
-//    vector<string> label_list;
-//    vector<string> coord_list;
-//
-//    std::string line;
-//
-//    std::string img_name;
-//    std::string img_shape;
-//    QStringList label_list_str;
-//    QStringList coord_list_str;
-//    std::string user_name;
-//    std::string user_insti;
-//    std::string user_career;
-//
-//    std::fstream annotation_file(annotation_path);
-//    std::fstream csv_file_header(csv_path);
-//    std::fstream csv_file_data(csv_path);
-//
-//
-//    csv_file_header.open(csv_path, std::ios::out);
-//    csv_file_header << "파일명," << "파일 크기," << "작성자," << "소속," << "경력," << "라벨," << "좌표" << std::endl;
-//    csv_file_header.close();
-//
-//    if (std::filesystem::exists(annotation_path)) {
-//        csv_file_data.open(csv_path, std::ios::app);
-//        while (std::getline(annotation_file, line)) {
-//            QStringList line_q = QString::fromStdString(line).split(",");
-//            img_name = line_q[0].toStdString();
-//            img_shape = line_q[1].toStdString();
-//            label_list_str = line_q[2].split(":");
-//            coord_list_str = line_q[3].split(":");
-//            user_name = line_q[4].toStdString();
-//            user_insti = line_q[5].toStdString();
-//            user_career = line_q[6].toStdString();
-//
-//            
-//            for (int i = 0; i < label_list_str.size(); i++) {
-//                if (csv_file_data.is_open()) {
-//                    std::string input_coord = "\"" + coord_list_str[i].toStdString() + "\"";
-//                    std::string input_label = "\"" + label_list_str[i].toStdString() + "\"";
-//                    std::string save_s = img_name + "," + img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord;
-//                    csv_file_data << img_name + "," +img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord << std::endl;
-//                }
-//            }
-//        }
-//    }
-//    csv_file_data.close();
-//    annotation_file.close();
-//}
-
-void save_xlsx() {
+int save_xlsx() {
     std::string csv_path = ".\\result\\" + global_login_name.toStdString() + "\\Annotaion_Information.csv";
     std::string annotation_path = ".\\result\\" + global_login_name.toStdString() + "\\annotation_info.txt";
     std::string read_sentence;
@@ -317,6 +263,8 @@ void save_xlsx() {
     std::string user_name;
     std::string user_insti;
     std::string user_career;
+
+    int total_label_num = 0;
 
     {
         std::ofstream csv_file_header(csv_path);
@@ -339,10 +287,12 @@ void save_xlsx() {
             for (int i = 0; i < label_list_str.size(); i++) {
                 std::string input_coord = "\"" + coord_list_str[i].toStdString() + "\"";
                 std::string input_label = "\"" + label_list_str[i].toStdString() + "\"";
-                std::string save_s = img_name + "," + img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord;
                 csv_file_data << img_name + "," + img_shape + "," + user_name + "," + user_insti + "," + user_career + "," + input_label + "," + input_coord << std::endl;
+                total_label_num += 1;
             }
         }
     }
+
+    return total_label_num;
 }
 

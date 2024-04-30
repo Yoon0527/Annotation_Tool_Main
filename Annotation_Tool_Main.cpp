@@ -477,5 +477,13 @@ void Annotation_Tool_Main::receiveLoginInfo(const QString& login_name, const QSt
 }
 
 void Annotation_Tool_Main::save_excel() {
-    save_xlsx();
+    QString total_label_num = QString::number(save_xlsx());
+
+    if (total_label_num == "0") {
+        ui.list_log->addItem(QString("No label information to save."));
+    }
+    else {
+        ui.list_log->addItem(QString(total_label_num + " Labels Information Saved"));
+        write_log(QString(QString(total_label_num + " Labels Information Saved")));
+    }
 }
