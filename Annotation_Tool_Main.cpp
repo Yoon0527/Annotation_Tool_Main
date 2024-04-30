@@ -458,16 +458,10 @@ void Annotation_Tool_Main::keyPressEvent(QKeyEvent* event) {
 }
 
 void Annotation_Tool_Main::image_move() {
-    int img_num = ui.list_image->currentItem()->text().toInt() - 1;
-    int num_between = abs(img_count - img_num);
-    if (img_count > img_num) {
-        img_count -= num_between;
-    }
-    else if(img_count < img_num){
-        img_count += num_between;
-    }
+    int find_txt = ui.list_image->currentIndex().row();
+    img_count = find_txt;
     QString* first_path(&file_list[0]);
-    Annotation_Tool_Main::show_img(*(first_path + img_count));
+    Annotation_Tool_Main::show_img(*(first_path + find_txt));
 }
 
 void Annotation_Tool_Main::receiveLoginInfo(const QString& login_name, const QString& login_institude, const QString login_career) {
