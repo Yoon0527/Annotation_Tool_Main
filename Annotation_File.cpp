@@ -231,6 +231,15 @@ void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap
 
 }
 
+void save_pixmap_rect(std::string txt_path, std::string filename, QPixmap save_pixmap) {
+    QString pixmap_save_path = QString::fromStdString(txt_path + filename + "\\" + filename + "_result" + ".png");
+    QFile file(pixmap_save_path);
+
+    QImage save_img = save_pixmap.toImage();
+    save_img.save(pixmap_save_path, "PNG");
+   
+}
+
 void write_log(QString log_sentence) {
     std::fstream log_txt;
     std::string log_path = ".\\result\\" + global_login_name.toStdString() + "\\log.txt";
@@ -268,6 +277,7 @@ int save_xlsx() {
 
     {
         std::ofstream csv_file_header(csv_path);
+        csv_file_header << "\xEF\xBB\xBF";
         csv_file_header << "파일명," << "파일 크기," << "작성자," << "소속," << "경력," << "라벨," << "좌표" << std::endl;
     }
 

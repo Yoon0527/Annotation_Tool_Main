@@ -207,6 +207,7 @@ void Annotation_Tool_Main::show_img(QString path) {
 
     if (tmp.size() != 0) {
         return_pixmap = make_pixmap(tmp, m_image);
+        save_pixmap_rect(user_path + "\\", fileName.toStdString(), return_pixmap);
         current_pixmap = return_pixmap.copy();
         ui.lbl_image->setPixmap(return_pixmap);
         ui.lbl_image->setScaledContents(true);
@@ -221,6 +222,7 @@ void Annotation_Tool_Main::show_img(QString path) {
         ui.lbl_image->setPixmap(m_image);
         ui.lbl_image->setScaledContents(true);
         current_pixmap = m_image.copy();
+        save_pixmap_rect(user_path + "\\", fileName.toStdString(), m_image);
     }
 
 }
@@ -298,6 +300,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
                 bool result = read_info();
                 write_log(QString("Draw Rect, " + fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
                 save_xlsx();
+                save_pixmap_rect(user_path + "\\", fileName.toStdString(), return_pixmap);
             }
             else {
                 show_img(*(&file_list[0] + img_count));
