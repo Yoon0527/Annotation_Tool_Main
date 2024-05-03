@@ -66,6 +66,7 @@ private:
 
     string user_path;
     QString fileName;
+    QString current_image_path;
 
     vector<Rect_info> rect_info;
 

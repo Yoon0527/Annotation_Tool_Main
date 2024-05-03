@@ -129,11 +129,17 @@ void Annotation_Tool_Main::load_image() {
             QString fileName_pre = differ_list[i].section("/", -1);
             file_name_list.append(fileName_pre.split(".")[0]);
         }
+        std::sort(file_name_list.begin(), file_name_list.end());
         ui.list_image->clear();
         ui.list_image->addItems(file_name_list);
         write_log(QString(QString::number(differ_list.size()) + " additional images have been loaded"));
         ui.list_log->addItem(QString(QString::number(differ_list.size()) + " additional images have been loaded"));
+
+        std::sort(file_list_tmp.begin(), file_list_tmp.end());
+
         file_list = file_list_tmp;
+        file_list_len = file_list.size();
+        img_count = file_list.indexOf(current_image_path);
     }
     else {
         file_list.clear();
@@ -161,9 +167,11 @@ void Annotation_Tool_Main::load_image() {
         ui.list_log->addItem(QString(file_size + " Images Load"));
     }
     //ui.list_image->sortItems();
+    ui.lbl_image->setFocus();
 }
 
 void Annotation_Tool_Main::show_img(QString path) {
+    current_image_path = path;
     ui.lbl_image->setFocus();
     ui.list_lbl->clear();
     ui.line_inputfile->clear();
