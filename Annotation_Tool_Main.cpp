@@ -4,7 +4,6 @@
 #include"Annotation_Tool_login.h"
 #include"Annotation_FIle.h"
 #include"globals.h"
-//#include "CustomLabel.h"
 #include <QtGui/QPainter>
 #include <QtGui/QPen>
 #include <QtGui/QPaintEvent>

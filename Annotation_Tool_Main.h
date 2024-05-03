@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <QRubberband>
 #include <QPaintEvent>
 #include "ui_Annotation_Tool_Main.h"
 #include <qfiledialog.h>

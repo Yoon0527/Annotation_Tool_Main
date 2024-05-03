@@ -2,20 +2,15 @@
 #include <QRect>
 #include <fstream>
 #include <string>
-#include <iostream>
 #include <filesystem>
 #include<QStringList>
 #include<QDebug>
 #include<QPixmap>
 #include<QPainter>
-#include<QBuffer>
 #include<QFile>
-#include<QIODevice>
-//#include<QtXlsx>
-//#include<direct.h>
-
 #include"Annotation_Tool_Main.h"
 #include"globals.h"
+
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent) {
     vector<std::string> tmp_list;
     // 파일 열기
