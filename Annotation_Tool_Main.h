@@ -38,6 +38,7 @@ public:
     void change_list_info(QString label);
     void change_txt(vector<Rect_info> input_vec, QString select_label);
     void keyPressEvent(QKeyEvent* event);
+    
 
 private:
     Ui::Annotation_Tool_MainClass ui;

@@ -400,14 +400,17 @@ void Annotation_Tool_Main::delete_label() {
     //list_lbl의 currentItem을 QString으로 받고,
     //해당 라벨을 annotation_info.txt에서 삭제
     //annotation_txt를 다시 읽기.
-    if (ui.list_lbl->count() != 0) {
-        QListWidgetItem* select_item = ui.list_lbl->currentItem();
+    QListWidgetItem* select_item = ui.list_lbl->currentItem();
+    if (ui.list_lbl->count() != 0 && select_item != NULL) {
+        
         QString select = select_item->text();
         //ui.list_lbl->setCurrentItem(nullptr);
         int row = ui.list_lbl->currentRow();
         delete ui.list_lbl->takeItem(row);
         //select_item->setSelected(false);
+        
         change_txt(rect_info, select);
+        removeEmptyLines();
         save_xlsx();
     }
 }

@@ -276,6 +276,8 @@ int save_xlsx() {
         std::ifstream annotation_file(annotation_path);
         while (std::getline(annotation_file, line)) {
             QStringList line_q = QString::fromStdString(line).split(",");
+            if (line_q.size() != 0){}
+
             img_name = line_q[0].toStdString();
             img_shape = line_q[1].toStdString();
             label_list_str = line_q[2].split(":");
@@ -296,3 +298,49 @@ int save_xlsx() {
     return total_label_num;
 }
 
+void removeEmptyLines() {
+
+    std::string annotation_path = ".\\result\\" + global_login_name.toStdString() + "\\annotation_info.txt";
+    // 파일 읽기 모드로 열기
+    std::ifstream inFile(annotation_path);
+
+    // 파일이 제대로 열렸는지 확인
+    if (!inFile) {
+        std::cerr << "파일을 열 수 없습니다." << std::endl;
+        return;
+    }
+
+    // 파일의 내용을 줄 단위로 읽어와 벡터에 저장
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(inFile, line)) {
+        lines.push_back(line);
+    }
+
+    // 파일 닫기
+    inFile.close();
+
+    // 공백이 있는 줄을 제거
+    lines.erase(std::remove_if(lines.begin(), lines.end(), [](const std::string& str) {
+        return str.find_first_not_of(" \t\n\r\f\v") == std::string::npos;
+        }), lines.end());
+
+    // 파일 쓰기 모드로 열기
+    std::ofstream outFile(annotation_path);
+
+    // 파일이 제대로 열렸는지 확인
+    if (!outFile) {
+        std::cerr << "파일을 열 수 없습니다." << std::endl;
+        return;
+    }
+
+    // 수정된 내용을 파일에 쓰기
+    for (const auto& line : lines) {
+        outFile << line << std::endl;
+    }
+
+    // 파일 닫기
+    outFile.close();
+
+    std::cout << "공백이 있는 줄이 제거되었습니다." << std::endl;
+}
