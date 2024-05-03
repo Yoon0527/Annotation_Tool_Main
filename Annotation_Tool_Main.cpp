@@ -254,39 +254,47 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             if (mouseEvent->button() == Qt::LeftButton) {
                 startPoint = mapToImageCoordinates(mouseEvent->pos());
                 m_drawing = true;
+                rect_w = 0;
+                rect_h = 0;
             }
         }
         else if (event->type() == QEvent::MouseMove && m_drawing) {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
             QPoint endPos = mapToImageCoordinates(mouseEvent->pos());
-            int width = endPos.x() - startPoint.x();
-            int height = endPos.y() - startPoint.y();
-            m_currentRect = QRect(startPoint, QSize(width, height));
+            rect_w = endPos.x() - startPoint.x();
+            rect_h = endPos.y() - startPoint.y();
+            if (rect_w > 15 && rect_h > 15) {
+                m_currentRect = QRect(startPoint, QSize(rect_w, rect_h));
 
-            QPixmap pixmap = current_pixmap;
-            QPainter painter(&pixmap);
-            QPen pen(Qt::green);
-            pen.setWidth(1);
+                QPixmap pixmap = current_pixmap;
+                QPainter painter(&pixmap);
+                QPen pen(Qt::green);
+                pen.setWidth(1);
 
-            painter.setPen(pen);
-            painter.drawRect(m_currentRect);
-            ui.lbl_image->setPixmap(pixmap);
-            
-            //QPixmap output_pixmap = draw_rectangles(m_image, tmp);
+                painter.setPen(pen);
+                painter.drawRect(m_currentRect);
+                ui.lbl_image->setPixmap(pixmap);
+            }
 
         }
         else if (event->type() == QEvent::MouseButtonRelease && m_drawing) {
-            m_drawing = false;
-            m_rectangles.append(m_currentRect);
-            make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
-            QStringList tmp = read_label_txt(label_path, fileName.toStdString());
-            QPixmap return_pixmap = make_pixmap(tmp, current_pixmap);
-            ui.lbl_image->setPixmap(return_pixmap);
-            make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
-            ui.list_lbl->clear();
-            bool result = read_info();
-            write_log(QString("Draw Rect, "+ fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
-            save_xlsx();
+            if (rect_w > 15 && rect_h > 15) {
+                m_drawing = false;
+                m_rectangles.append(m_currentRect);
+                make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
+                QStringList tmp = read_label_txt(label_path, fileName.toStdString());
+                QPixmap return_pixmap = make_pixmap(tmp, current_pixmap);
+                ui.lbl_image->setPixmap(return_pixmap);
+                make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
+                ui.list_lbl->clear();
+                bool result = read_info();
+                write_log(QString("Draw Rect, " + fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
+                save_xlsx();
+            }
+            else {
+                show_img(*(&file_list[0] + img_count));
+            }
+
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);

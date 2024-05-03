@@ -58,6 +58,8 @@ private:
     int img_count = 0;
     int img_w;
     int img_h;
+    int rect_w;
+    int rect_h;
     string user_name;
     string user_career;
     string user_institution;
