@@ -12,7 +12,7 @@
 #include<QMessageBox>
 #include<direct.h>
 #include<cstdlib>
-
+#include<QTimer>
 
 Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     : QMainWindow(parent)
@@ -35,8 +35,12 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.sl_imgBrightness, &QSlider::valueChanged, this, &Annotation_Tool_Main::adjustBrightness);
     connect(ui.list_image, &QListWidget::itemDoubleClicked, this, &Annotation_Tool_Main::image_move);
 
-
     ui.lbl_image->installEventFilter(this);
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timer->timeout()), this, SLOT(updateTimer()));
+    timer->start(1000);
+
 }
 
 Annotation_Tool_Main::~Annotation_Tool_Main()
@@ -172,6 +176,7 @@ void Annotation_Tool_Main::show_img(QString path) {
     QString file_path = path;
     QString fileName_pre = file_path.section("/", -1);
     fileName = fileName_pre.split(".")[0];
+    ui.lbl_current_imgName->setText(fileName);
     make_directory(user_path, "image", fileName.toStdString());
     m_image.load(file_path);
     save_pixmap(user_path + "\\", fileName.toStdString(), m_image);
@@ -281,6 +286,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
             ui.list_lbl->clear();
             bool result = read_info();
             write_log(QString("Draw Rect, "+ fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
+            save_xlsx();
         }
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);
@@ -394,14 +400,16 @@ void Annotation_Tool_Main::delete_label() {
     //list_lbl의 currentItem을 QString으로 받고,
     //해당 라벨을 annotation_info.txt에서 삭제
     //annotation_txt를 다시 읽기.
-
-    QListWidgetItem* select_item = ui.list_lbl->currentItem();
-    QString select = select_item->text();
-    //ui.list_lbl->setCurrentItem(nullptr);
-    int row = ui.list_lbl->currentRow();
-    delete ui.list_lbl->takeItem(row);
-    //select_item->setSelected(false);
-    change_txt(rect_info, select);
+    if (ui.list_lbl->count() != 0) {
+        QListWidgetItem* select_item = ui.list_lbl->currentItem();
+        QString select = select_item->text();
+        //ui.list_lbl->setCurrentItem(nullptr);
+        int row = ui.list_lbl->currentRow();
+        delete ui.list_lbl->takeItem(row);
+        //select_item->setSelected(false);
+        change_txt(rect_info, select);
+        save_xlsx();
+    }
 }
 
 void Annotation_Tool_Main::change_txt(vector<Rect_info> input_vec, QString select_label) {
@@ -494,5 +502,21 @@ void Annotation_Tool_Main::save_excel() {
     else {
         ui.list_log->addItem(QString(total_label_num + " Labels Information Saved"));
         write_log(QString(QString(total_label_num + " Labels Information Saved")));
+    }
+}
+
+void Annotation_Tool_Main::updateTimer() {
+    
+    if (second < 60) {
+        ui.lbl_second->setText(QString::number(second));
+        ui.lbl_minute->setText(QString::number(minute));
+        second += 1;
+    }
+    else if (second == 60) {
+        second = 0;
+        minute += 1;
+        ui.lbl_second->setText(QString::number(second));
+        ui.lbl_minute->setText(QString::number(minute));
+        second += 1;
     }
 }

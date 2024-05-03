@@ -11,6 +11,7 @@
 #include <vector>
 #include <QMouseEvent>
 #include <filesystem>
+#include<QTimer>
 
 using namespace std;
 
@@ -65,7 +66,9 @@ private:
 
     vector<Rect_info> rect_info;
 
-    
+    QTimer* timer;
+    qint64 minute=0;
+    qint64 second=0;
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event);
@@ -94,6 +97,9 @@ private slots:
     void image_move();
 
     void save_excel();
+
+    void updateTimer();
+
 
     
 };
