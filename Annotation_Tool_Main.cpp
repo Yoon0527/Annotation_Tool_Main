@@ -38,7 +38,7 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     ui.lbl_image->installEventFilter(this);
 
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timer->timeout()), this, SLOT(updateTimer()));
+    connect(timer, &QTimer::timeout, this, &Annotation_Tool_Main::updateTimer);
     timer->start(1000);
 
 }
