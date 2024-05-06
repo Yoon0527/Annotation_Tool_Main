@@ -27,7 +27,7 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     connect(ui.btn_next, SIGNAL(clicked()), this, SLOT(next_img()));
     connect(ui.btn_prev, SIGNAL(clicked()), this, SLOT(prev_img()));
     connect(ui.btn_delLabel, SIGNAL(clicked()), this, SLOT(delete_label()));
-    connect(ui.btn_saveInfo, SIGNAL(clicked()), this, SLOT(save_excel()));
+    connect(ui.btn_saveInfo, SIGNAL(clicked()), this, SLOT(save_files()));
     //connect(ui.btn_quit, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(ui.list_lbl, &QListWidget::itemClicked, this, &Annotation_Tool_Main::onItemClicked);
 
@@ -514,7 +514,7 @@ void Annotation_Tool_Main::receiveLoginInfo(const QString& login_name, const QSt
     user_career = login_career.toStdString();
 }
 
-void Annotation_Tool_Main::save_excel() {
+void Annotation_Tool_Main::save_files() {
     QString total_label_num = QString::number(save_xlsx());
 
     if (total_label_num == "0") {
@@ -524,6 +524,8 @@ void Annotation_Tool_Main::save_excel() {
         ui.list_log->addItem(QString(total_label_num + " Labels Information Saved"));
         write_log(QString(QString(total_label_num + " Labels Information Saved")));
     }
+
+    devideFile();
 }
 
 void Annotation_Tool_Main::updateTimer() {

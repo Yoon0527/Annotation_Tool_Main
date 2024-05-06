@@ -11,6 +11,8 @@
 #include"Annotation_Tool_Main.h"
 #include"globals.h"
 
+namespace fs = std::filesystem;
+
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent) {
     vector<std::string> tmp_list;
     // 파일 열기
@@ -168,6 +170,24 @@ QStringList read_label_txt(std::string txt_path, std::string filename) {
 
     QStringList label_list;
     
+    if (std::filesystem::exists(label_txt_path)) {
+        std::ifstream label_info(label_txt_path);
+        while (std::getline(label_info, label)) {
+            label_list.append(QString::fromStdString(label));
+        }
+        return label_list;
+    }
+    else {
+        return label_list;
+    }
+}
+
+QStringList read_label_txt_for_save(std::string txt_path) {
+    std::string label_txt_path = txt_path + ".txt";
+    std::string label;
+
+    QStringList label_list;
+
     if (std::filesystem::exists(label_txt_path)) {
         std::ifstream label_info(label_txt_path);
         while (std::getline(label_info, label)) {
@@ -349,3 +369,82 @@ void removeEmptyLines() {
 
     std::cout << "공백이 있는 줄이 제거되었습니다." << std::endl;
 }
+
+bool containsTargetFile(const fs::path& dir, const std::string& targetName) {
+    for (const auto& entry : fs::directory_iterator(dir)) {
+        if (entry.is_regular_file() && entry.path().filename().string().find(targetName) != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//void traverseDirectory(const fs::path& directory, const std::string& target_word) {
+//    fs::path result_path_label = ".\\result\\" + global_login_name.toStdString() + "\\Label_Images";
+//    fs::path result_path_nonlabel = ".\\result\\" + global_login_name.toStdString() + "\\Non_Label_Images";
+//
+//    std::filesystem::create_directories(result_path_label);
+//    std::filesystem::create_directories(result_path_nonlabel);
+//
+//    for (const auto& entry : fs::directory_iterator(directory)) {
+//        if (entry.is_directory()) {
+//            // 만약 디렉토리라면 해당 디렉토리를 재귀적으로 탐색
+//            traverseDirectory(entry.path(), target_word);
+//        }
+//        else if (entry.is_regular_file()) {
+//            // 파일에 대한 작업을 여기서 수행
+//            if (entry.path().extension() == ".png") { // PNG 파일인 경우
+//                if (entry.path().filename().string().find(target_word) != std::string::npos) { // 특정 단어를 포함하는 경우
+//                    // 대상 폴더에 파일 복사 혹은 이동
+//                    fs::copy_file(entry.path(), result_path_label / entry.path().filename());
+//                    //std::cout << "파일을 이동했습니다: " << (result_path_label / entry.path().filename()) << std::endl;
+//                }
+//                else {
+//                    fs::copy_file(entry.path(), result_path_nonlabel / entry.path().filename());
+//                }
+//            }
+//        }
+//    }
+//}
+
+void traverseDirectory(const fs::path& directory, const std::string& target_word) {
+    fs::path result_path_label = ".\\result\\" + global_login_name.toStdString() + "\\Label_Images";
+    fs::path result_path_nonlabel = ".\\result\\" + global_login_name.toStdString() + "\\Non_Label_Images";
+
+    std::filesystem::create_directories(result_path_label);
+    std::filesystem::create_directories(result_path_nonlabel);
+
+    for (const auto& entry : fs::directory_iterator(directory)) {
+        if (entry.is_directory()) {
+            // 만약 디렉토리라면 해당 디렉토리를 재귀적으로 탐색
+            traverseDirectory(entry.path(), target_word);
+        }
+        else if (entry.is_regular_file()) {
+            // 파일에 대한 작업을 여기서 수행
+            if (entry.path().extension() == ".png") { // PNG 파일인 경우
+                if (entry.path().filename().string().find(target_word) != std::string::npos) { // 특정 단어를 포함하는 경우
+                    // 대상 폴더에 파일 복사 혹은 이동
+                    std::string tmp_path = entry.path().generic_string();
+                    QString txt_path = QString::fromStdString(tmp_path).trimmed();
+                    QString txt_path_ = txt_path.split(".png")[0];
+                    QStringList tmp = read_label_txt_for_save(txt_path.toStdString());
+                    if (tmp.size() != 0) {
+                        fs::copy_file(entry.path(), result_path_label / entry.path().filename());
+                    }
+                    else if(tmp.size() == 0){
+                        fs::copy_file(entry.path(), result_path_nonlabel / entry.path().filename());
+                    }
+                    //std::cout << "파일을 이동했습니다: " << (result_path_label / entry.path().filename()) << std::endl;
+                }
+            }
+        }
+    }
+}
+
+void devideFile() {
+    fs::path source_path = ".\\result\\" + global_login_name.toStdString() + "\\";
+    std::string target_name = "_result.png";
+
+    traverseDirectory(source_path, target_name);
+}
+

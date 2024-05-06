@@ -11,6 +11,8 @@
 #include<QStringList>
 #include<list>
 
+namespace fs = std::filesystem;
+
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent);
 void make_label_txt(std::string txt_path, std::string filename, QPoint startP, int w, int h);
 void make_directory(std::string path, std::string mode, std::string filename);
@@ -20,6 +22,9 @@ void save_pixmap_rect(std::string txt_path, std::string filename, QPixmap save_p
 void write_log(QString log_sentence);
 void removeEmptyLines();
 int save_xlsx();
+bool containsTargetFile(const fs::path& dir, const std::string& targetName);
+void devideFile();
+void traverseDirectory(const fs::path& directory, std::string target);
 //fstream search_line(fstream input_file, std::string find_string);
 
 QStringList read_label_txt(std::string txt_path, std::string filename);
