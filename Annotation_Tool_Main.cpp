@@ -186,7 +186,7 @@ void Annotation_Tool_Main::show_img(QString path) {
     ui.lbl_current_imgName->setText(fileName);
     make_directory(user_path, "image", fileName.toStdString());
     m_image.load(file_path);
-    save_pixmap(user_path + "\\", fileName.toStdString(), m_image);
+    save_pixmap(user_path + "\\Images\\", fileName.toStdString(), m_image);
     //img.scaled(30, 30);
     //img.scaledToWidth(10);
     img_w = m_image.width();
@@ -435,7 +435,7 @@ void Annotation_Tool_Main::delete_label() {
 
 void Annotation_Tool_Main::change_txt(vector<Rect_info> input_vec, QString select_label) {
     string read_path = user_path + "\\Annotation_info.txt";
-    string label_txt = user_path + "\\" + fileName.toStdString() +"\\" + fileName.toStdString() +".txt";
+    string label_txt = user_path + "\\Images\\" + fileName.toStdString() +"\\" + fileName.toStdString() +".txt";
     QString save_sentence;
     QString label_;
     QString coord_;

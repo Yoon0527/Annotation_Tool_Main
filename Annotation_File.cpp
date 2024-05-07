@@ -83,7 +83,7 @@ void make_directory(std::string path, std::string mode, std::string filename) {
         }
     }
     else if (mode == "image") {
-        std::filesystem::path p(path + "\\" + filename);
+        std::filesystem::path p(path + "\\Images\\" + filename);
         if (std::filesystem::is_directory(p)) {
             return;
         }
@@ -96,7 +96,7 @@ void make_directory(std::string path, std::string mode, std::string filename) {
 
 void make_label_txt(std::string txt_path, std::string filename, QPoint startP, int w, int h) {
     std::fstream label_info;
-    std::string label_txt_path = txt_path + filename + "\\" + filename + ".txt";
+    std::string label_txt_path = txt_path + "Images\\" + filename + "\\" + filename + ".txt";
     if (std::filesystem::exists(label_txt_path)) {
         label_info.open(label_txt_path, std::ios::app);
         std::string x = std::to_string(startP.x());
@@ -165,7 +165,7 @@ void make_info_txt(std::string info_path, QString filename, int width, int heigh
 }
 
 QStringList read_label_txt(std::string txt_path, std::string filename) {
-    std::string label_txt_path = txt_path + filename + "\\" + filename + ".txt";
+    std::string label_txt_path = txt_path + "Images\\" + filename + "\\" + filename + ".txt";
     std::string label;
 
     QStringList label_list;
@@ -247,7 +247,7 @@ void save_pixmap(std::string txt_path, std::string filename, QPixmap save_pixmap
 }
 
 void save_pixmap_rect(std::string txt_path, std::string filename, QPixmap save_pixmap) {
-    QString pixmap_save_path = QString::fromStdString(txt_path + filename + "\\" + filename + "_result" + ".png");
+    QString pixmap_save_path = QString::fromStdString(txt_path + "Images\\" + filename + "\\" + filename + "_result" + ".png");
     QFile file(pixmap_save_path);
 
     QImage save_img = save_pixmap.toImage();
@@ -411,8 +411,16 @@ void traverseDirectory(const fs::path& directory, const std::string& target_word
     fs::path result_path_label = ".\\result\\" + global_login_name.toStdString() + "\\Label_Images";
     fs::path result_path_nonlabel = ".\\result\\" + global_login_name.toStdString() + "\\Non_Label_Images";
 
-    std::filesystem::create_directories(result_path_label);
-    std::filesystem::create_directories(result_path_nonlabel);
+    if (fs::exists(result_path_label) || fs::exists(result_path_nonlabel)) {
+        fs::remove_all(result_path_label);
+        fs::remove_all(result_path_nonlabel);
+        std::filesystem::create_directories(result_path_label);
+        std::filesystem::create_directories(result_path_nonlabel);
+    }
+    else {
+        std::filesystem::create_directories(result_path_label);
+        std::filesystem::create_directories(result_path_nonlabel);
+    }
 
     for (const auto& entry : fs::directory_iterator(directory)) {
         if (entry.is_directory()) {
@@ -421,19 +429,29 @@ void traverseDirectory(const fs::path& directory, const std::string& target_word
         }
         else if (entry.is_regular_file()) {
             // 파일에 대한 작업을 여기서 수행
+            std::string tmp_path_ = entry.path().generic_string();
+            std::string tmp_name = entry.path().filename().string();
             if (entry.path().extension() == ".png") { // PNG 파일인 경우
                 if (entry.path().filename().string().find(target_word) != std::string::npos) { // 특정 단어를 포함하는 경우
                     // 대상 폴더에 파일 복사 혹은 이동
                     std::string tmp_path = entry.path().generic_string();
-                    QString txt_path = QString::fromStdString(tmp_path).trimmed();
-                    QString txt_path_ = txt_path.split(".png")[0];
-                    QStringList tmp = read_label_txt_for_save(txt_path.toStdString());
-                    if (tmp.size() != 0) {
-                        fs::copy_file(entry.path(), result_path_label / entry.path().filename());
+                    QString img_path = QString::fromStdString(tmp_path).trimmed();
+                    QString txt_path_ = img_path.split("_result")[0];
+
+                    if (fs::exists(img_path.toStdString())) {
+                        QStringList tmp = read_label_txt_for_save(txt_path_.toStdString());
+                        if (tmp.size() != 0) {
+                            fs::copy(entry.path(), result_path_label.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                  
+                        }
+                        else if (tmp.size() == 0) {
+                            fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                        }
                     }
-                    else if(tmp.size() == 0){
-                        fs::copy_file(entry.path(), result_path_nonlabel / entry.path().filename());
+                    else {
+                        fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
                     }
+                    
                     //std::cout << "파일을 이동했습니다: " << (result_path_label / entry.path().filename()) << std::endl;
                 }
             }
@@ -442,7 +460,7 @@ void traverseDirectory(const fs::path& directory, const std::string& target_word
 }
 
 void devideFile() {
-    fs::path source_path = ".\\result\\" + global_login_name.toStdString() + "\\";
+    fs::path source_path = ".\\result\\" + global_login_name.toStdString() + "\\Images\\";
     std::string target_name = "_result.png";
 
     traverseDirectory(source_path, target_name);
