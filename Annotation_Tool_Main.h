@@ -44,6 +44,7 @@ private:
     QPixmap m_image;
     QPixmap return_pixmap;
     QPixmap current_pixmap;
+    QPixmap draw_pixmap;
     QRect m_currentRect;
     QVector<QRect> m_rectangles;
     bool m_drawing;

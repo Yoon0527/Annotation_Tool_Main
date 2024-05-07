@@ -292,14 +292,14 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
                 m_rectangles.append(m_currentRect);
                 make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
                 QStringList tmp = read_label_txt(label_path, fileName.toStdString());
-                QPixmap return_pixmap = make_pixmap(tmp, current_pixmap);
-                ui.lbl_image->setPixmap(return_pixmap);
+                draw_pixmap = make_pixmap(tmp, current_pixmap);
+                ui.lbl_image->setPixmap(draw_pixmap);
                 make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
                 ui.list_lbl->clear();
                 bool result = read_info();
                 write_log(QString("Draw Rect, " + fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
                 save_xlsx();
-                save_pixmap_rect(user_path + "\\", fileName.toStdString(), return_pixmap);
+                save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
             }
             else {
                 show_img(*(&file_list[0] + img_count));
@@ -316,7 +316,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
     //if (annotationFile_bool) {
     //    rect_info = read_info();
     //}
-
+    //save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
     return QMainWindow::eventFilter(obj, event);
 }
 
