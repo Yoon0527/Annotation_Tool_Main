@@ -408,19 +408,8 @@ bool containsTargetFile(const fs::path& dir, const std::string& targetName) {
 //}
 
 void traverseDirectory(const fs::path& directory, const std::string& target_word) {
-    fs::path result_path_label = ".\\result\\" + global_login_name.toStdString() + "\\Label_Images";
-    fs::path result_path_nonlabel = ".\\result\\" + global_login_name.toStdString() + "\\Non_Label_Images";
-
-    if (fs::exists(result_path_label) || fs::exists(result_path_nonlabel)) {
-        fs::remove_all(result_path_label);
-        fs::remove_all(result_path_nonlabel);
-        std::filesystem::create_directories(result_path_label);
-        std::filesystem::create_directories(result_path_nonlabel);
-    }
-    else {
-        std::filesystem::create_directories(result_path_label);
-        std::filesystem::create_directories(result_path_nonlabel);
-    }
+    divide_info lbl_info_vec;
+    divide_info non_lbl_info_vec;
 
     for (const auto& entry : fs::directory_iterator(directory)) {
         if (entry.is_directory()) {
@@ -439,18 +428,32 @@ void traverseDirectory(const fs::path& directory, const std::string& target_word
                     QString txt_path_ = img_path.split("_result")[0];
 
                     if (fs::exists(img_path.toStdString())) {
-                        QStringList tmp = read_label_txt_for_save(txt_path_.toStdString());
-                        if (tmp.size() != 0) {
-                            fs::copy(entry.path(), result_path_label.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
-                  
+                        if (fs::exists(txt_path_.toStdString() + ".txt")) {
+                            QStringList tmp = read_label_txt_for_save(txt_path_.toStdString());
+                            if (tmp.size() != 0) {
+                                //fs::copy(entry.path(), result_path_label.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                                lbl_info_vec.img_path = entry.path().string();
+                                lbl_info_vec.img_name = entry.path().filename().string();
+                                label_info_vec.push_back(lbl_info_vec);
+                            }
+                            else if (tmp.size() == 0) {
+                                //fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                                non_lbl_info_vec.img_path = entry.path().string();
+                                non_lbl_info_vec.img_name = entry.path().filename().string();
+                                non_label_info_vec.push_back(non_lbl_info_vec);
+                            }
                         }
-                        else if (tmp.size() == 0) {
-                            fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                        else {
+                            non_lbl_info_vec.img_path = entry.path().string();
+                            non_lbl_info_vec.img_name = entry.path().filename().string();
+                            non_label_info_vec.push_back(non_lbl_info_vec);
+
                         }
+                        
                     }
-                    else {
-                        fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
-                    }
+                    //else {
+                    //    fs::copy(entry.path(), result_path_nonlabel.string() + "\\" + entry.path().filename().string(), fs::copy_options::overwrite_existing);
+                    //}
                     
                     //std::cout << "파일을 이동했습니다: " << (result_path_label / entry.path().filename()) << std::endl;
                 }
@@ -459,10 +462,38 @@ void traverseDirectory(const fs::path& directory, const std::string& target_word
     }
 }
 
+void divide_folder() {
+    fs::path result_path_label = ".\\result\\" + global_login_name.toStdString() + "\\Label_Images";
+    fs::path result_path_nonlabel = ".\\result\\" + global_login_name.toStdString() + "\\Non_Label_Images";
+
+    if (fs::exists(result_path_label) || fs::exists(result_path_nonlabel)) {
+        fs::remove_all(result_path_label);
+        fs::remove_all(result_path_nonlabel);
+        std::filesystem::create_directories(result_path_label);
+        std::filesystem::create_directories(result_path_nonlabel);
+    }
+    else {
+        std::filesystem::create_directories(result_path_label);
+        std::filesystem::create_directories(result_path_nonlabel);
+    }
+
+    for (int i = 0; i < label_info_vec.size(); i++) {
+        fs::copy(label_info_vec[i].img_path, result_path_label.string() + "\\" + label_info_vec[i].img_name, fs::copy_options::overwrite_existing);
+    }
+
+    for (int i = 0; i < non_label_info_vec.size(); i++) {
+        fs::copy(non_label_info_vec[i].img_path, result_path_nonlabel.string() + "\\" + non_label_info_vec[i].img_name, fs::copy_options::overwrite_existing);
+    }
+}
+
 void devideFile() {
+    label_info_vec.clear();
+    non_label_info_vec.clear();
+
     fs::path source_path = ".\\result\\" + global_login_name.toStdString() + "\\Images\\";
     std::string target_name = "_result.png";
 
     traverseDirectory(source_path, target_name);
+    divide_folder();
 }
 

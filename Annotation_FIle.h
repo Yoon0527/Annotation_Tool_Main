@@ -25,6 +25,8 @@ int save_xlsx();
 bool containsTargetFile(const fs::path& dir, const std::string& targetName);
 void devideFile();
 void traverseDirectory(const fs::path& directory, std::string target);
+void divide_folder();
+
 //fstream search_line(fstream input_file, std::string find_string);
 
 QStringList read_label_txt(std::string txt_path, std::string filename);
