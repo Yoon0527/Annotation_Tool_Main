@@ -146,11 +146,11 @@ void make_info_txt(std::string info_path, QString filename, int width, int heigh
     save_sentence.append(institude + ",");
     save_sentence.append(career + ",");
 
-    std::string string_filename = filename.toStdString();
+    std::string search_word = filename.toStdString() + "," + std::to_string(width) + " " + std::to_string(height) + ",";
 
     if (std::filesystem::exists(save_path)) {
 
-        bool find_result = replaceLine_annotation(save_path, string_filename, save_sentence.toStdString());
+        bool find_result = replaceLine_annotation(save_path, search_word, save_sentence.toStdString());
         if (!find_result) {
             annotation_info.open(save_path, std::ios::app);
             annotation_info << save_sentence.toStdString() << "\n";
