@@ -24,12 +24,18 @@
   <property name="windowTitle">
    <string>Annotation_Tool_Main</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgb(46,52,54);</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(46,52,54);</string>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
@@ -47,6 +53,9 @@
           <pointsize>13</pointsize>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;</string>
         </property>
         <property name="text">
          <string>Prev</string>
@@ -83,6 +92,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;</string>
+        </property>
         <property name="text">
          <string>Next</string>
         </property>
@@ -98,6 +110,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
+          </property>
           <property name="text">
            <string>Save Information</string>
           </property>
@@ -110,6 +125,9 @@
             <pointsize>13</pointsize>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
           </property>
           <property name="text">
            <string>Edit Information</string>
@@ -124,6 +142,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
+          </property>
           <property name="text">
            <string>Delete</string>
           </property>
@@ -136,6 +157,9 @@
             <pointsize>13</pointsize>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
           </property>
           <property name="text">
            <string>Image Load</string>
@@ -158,6 +182,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -177,6 +204,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
            </widget>
           </item>
           <item row="5" column="2">
@@ -192,6 +222,9 @@
               <pointsize>13</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
@@ -211,6 +244,9 @@
               <pointsize>13</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="text">
              <string>FIle Name</string>
@@ -234,6 +270,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="text">
              <string>User Name</string>
             </property>
@@ -256,6 +295,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
            </widget>
           </item>
           <item row="11" column="1">
@@ -265,6 +307,9 @@
               <pointsize>11</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="text">
              <string>Image Brightness</string>
@@ -284,6 +329,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="styleSheet">
+               <string notr="true">color:white;</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -299,6 +347,9 @@
                 <pointsize>13</pointsize>
                 <bold>true</bold>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color:white;</string>
               </property>
               <property name="text">
                <string>:</string>
@@ -316,6 +367,9 @@
                 <bold>true</bold>
                </font>
               </property>
+              <property name="styleSheet">
+               <string notr="true">color:white;</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -330,6 +384,9 @@
               <pointsize>13</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="text">
              <string>Test Time</string>
@@ -353,6 +410,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -372,6 +432,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="text">
              <string>Career</string>
             </property>
@@ -387,6 +450,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="minimum">
              <number>0</number>
@@ -413,6 +479,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="text">
              <string>Coordinate</string>
             </property>
@@ -435,6 +504,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -453,6 +525,9 @@
               <pointsize>13</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="text">
              <string>Institude</string>
@@ -476,6 +551,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -495,6 +573,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -513,6 +594,9 @@
               <pointsize>13</pointsize>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
             </property>
             <property name="text">
              <string>File Shape</string>
@@ -538,6 +622,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
+          </property>
          </widget>
         </item>
         <item row="0" column="0" colspan="2">
@@ -547,6 +634,9 @@
             <pointsize>15</pointsize>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:white;</string>
           </property>
           <property name="text">
            <string/>
