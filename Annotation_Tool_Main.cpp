@@ -36,9 +36,9 @@ Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
 
     ui.lbl_image->installEventFilter(this);
 
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Annotation_Tool_Main::updateTimer);
-    timer->start(1000);
+    //timer = new QTimer(this);
+    //connect(timer, &QTimer::timeout, this, &Annotation_Tool_Main::updateTimer);
+    //timer->start(1000);
 
 }
 
@@ -164,6 +164,10 @@ void Annotation_Tool_Main::load_image() {
         }
         write_log(QString(file_size + " Images Load"));
         ui.list_log->addItem(QString(file_size + " Images Load"));
+
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, &Annotation_Tool_Main::updateTimer);
+        timer->start(1000);
     }
     //ui.list_image->sortItems();
     ui.lbl_image->setFocus();
