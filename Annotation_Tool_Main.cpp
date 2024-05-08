@@ -187,7 +187,7 @@ void Annotation_Tool_Main::show_img(QString path) {
     QString file_path = path;
     QString fileName_pre = file_path.section("/", -1);
     fileName = fileName_pre.split(".")[0];
-    ui.lbl_current_imgName->setText(fileName);
+    ui.lbl_current_imgName->setText("Current Image: "+fileName);
     make_directory(user_path, "image", fileName.toStdString());
     m_image.load(file_path);
     save_pixmap(user_path + "\\Images\\", fileName.toStdString(), m_image);
