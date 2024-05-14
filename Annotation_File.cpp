@@ -200,8 +200,38 @@ QStringList read_label_txt_for_save(std::string txt_path) {
     }
 }
 
-
 QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap) {
+    QPixmap return_pixmap = input_pixmap;
+
+    for (int i = 0; i < input_label_list.size(); i++) {
+        QRect tmp_rect;
+
+        int x = input_label_list[i].split(";")[0].toInt();
+        int y = input_label_list[i].split(";")[1].toInt();
+        int width = input_label_list[i].split(";")[2].toInt();
+        int height = input_label_list[i].split(";")[3].toInt();
+
+        tmp_rect = QRect(QPoint(x, y), QSize(width, height));
+
+        QPainter painter(&return_pixmap);
+        QPen pen(Qt::green);
+        pen.setWidth(1);
+        painter.setPen(pen);
+        painter.drawRect(tmp_rect);
+
+        QString label_num = "Label_" + QString::number(i);
+
+        QFont font("Arial", 12);
+        QRect txt_rect = QRect(QPoint(x + 5, y), QSize(width, height));
+        painter.setFont(font);
+        painter.drawText(txt_rect, Qt::AlignLeft | Qt::AlignTop, label_num);
+    }
+
+
+    return return_pixmap;
+}
+
+QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap, std::string txt_path, std::string filename) {
     QPixmap return_pixmap = input_pixmap;
 
     for (int i = 0; i < input_label_list.size(); i++) {
@@ -227,6 +257,12 @@ QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap) {
         painter.setFont(font);
         painter.drawText(txt_rect, Qt::AlignLeft|Qt::AlignTop, label_num);
     }
+
+    QString pixmap_save_path = QString::fromStdString(txt_path + "Images\\" + filename + "\\" + filename + "_result" + ".png");
+    //QFile file(pixmap_save_path);
+
+    QImage save_img = return_pixmap.toImage();
+    save_img.save(pixmap_save_path, "PNG");
 
     return return_pixmap;
 }

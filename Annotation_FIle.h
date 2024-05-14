@@ -10,7 +10,8 @@
 #include<string>
 #include<QStringList>
 #include<list>
-
+#include<QPoint>
+#include<QPixmap>
 namespace fs = std::filesystem;
 
 bool replaceLine_annotation(const std::string& fileName, std::string searchChar, const std::string& newContent);
@@ -31,3 +32,4 @@ void divide_folder();
 
 QStringList read_label_txt(std::string txt_path, std::string filename);
 QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap);
+QPixmap make_pixmap(QStringList input_label_list, QPixmap input_pixmap, std::string txt_path, std::string filename);

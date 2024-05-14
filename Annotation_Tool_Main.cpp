@@ -3,6 +3,7 @@
 #include "Annotation_Tool_Main.h"
 #include"Annotation_Tool_login.h"
 #include"Annotation_FIle.h"
+#include "ImageSaver.h"
 #include"globals.h"
 #include <QtGui/QPainter>
 #include <QtGui/QPen>
@@ -12,6 +13,7 @@
 #include<direct.h>
 #include<cstdlib>
 #include<QTimer>
+#include<QThread>
 
 Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     : QMainWindow(parent)
@@ -262,6 +264,11 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
 {
     string label_path = user_path + "\\";
     if (obj == ui.lbl_image) {
+        ImageSaver* imageSaver = new ImageSaver();
+        QThread* imageSaverThread = new QThread();
+        imageSaver->moveToThread(imageSaverThread);
+        imageSaverThread->start();
+
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
@@ -296,6 +303,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
                 m_rectangles.append(m_currentRect);
                 make_label_txt(label_path, fileName.toStdString(), startPoint, m_currentRect.width(), m_currentRect.height());
                 QStringList tmp = read_label_txt(label_path, fileName.toStdString());
+                //draw_pixmap = make_pixmap(tmp, current_pixmap, user_path + "\\", fileName.toStdString());
                 draw_pixmap = make_pixmap(tmp, current_pixmap);
                 ui.lbl_image->setPixmap(draw_pixmap);
                 make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
@@ -303,13 +311,16 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
                 bool result = read_info();
                 write_log(QString("Draw Rect, " + fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
                 save_xlsx();
-                save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
+                //save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
+                QMetaObject::invokeMethod(imageSaver, "savePixmap", Qt::QueuedConnection, Q_ARG(std::string, user_path + "\\"), Q_ARG(std::string, fileName.toStdString()), Q_ARG(QPixmap, draw_pixmap));
             }
             else {
                 show_img(*(&file_list[0] + img_count));
             }
 
         }
+        connect(imageSaverThread, &QThread::finished, imageSaverThread, &QObject::deleteLater);
+        connect(imageSaverThread, &QThread::finished, imageSaver, &QObject::deleteLater);
         //QStringList tmp = read_label_txt(label_path, fileName.toStdString());
         //QList<int> return_label = each_label(tmp);
         //QPixmap output_pixmap = draw_rectangles(m_image, tmp);
@@ -321,6 +332,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
     //    rect_info = read_info();
     //}
     //save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
+
     return QMainWindow::eventFilter(obj, event);
 }
 

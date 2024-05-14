@@ -104,11 +104,13 @@
     <ClCompile Include="Annotation_Tool_login.cpp" />
     <ClCompile Include="Annotation_Tool_Main.cpp" />
     <ClCompile Include="globals.cpp" />
+    <ClCompile Include="ImageSaver.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Annotation_FIle.h" />
     <ClInclude Include="globals.h" />
+    <QtMoc Include="ImageSaver.h" />
     <QtMoc Include="Annotation_Tool_login.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
