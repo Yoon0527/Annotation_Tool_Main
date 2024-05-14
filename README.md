@@ -5,7 +5,7 @@
 ### 설명
 1. 로그인
 - 사용자의 이름, 소속, 경력을 입력 후 로그인.
-![mainwindow](https://github.com/Yoon0527/Annotation_Tool_Main/assets/67099001/d495d72e-5e3f-4b01-8a79-99b8255ffdbf)
+![login](https://github.com/Yoon0527/Annotation_Tool_Main/assets/67099001/730b5a11-3351-43fa-b654-e3c832f8a662)
 
 2. 메인 창<br/>
 ![mainwindow](https://github.com/Yoon0527/Annotation_Tool_Main/assets/67099001/11ff5098-e38c-4db4-8465-6de6df1c853d)
