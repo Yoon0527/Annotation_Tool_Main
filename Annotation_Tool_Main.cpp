@@ -14,6 +14,7 @@
 #include<cstdlib>
 #include<QTimer>
 #include<QThread>
+#include<ctime>
 
 Annotation_Tool_Main::Annotation_Tool_Main(QWidget* parent)
     : QMainWindow(parent)
@@ -94,6 +95,10 @@ void Annotation_Tool_Main::adjustBrightness(int value)
 
 void Annotation_Tool_Main::init_info() {
 
+    std::time_t login_time = std::time(nullptr);
+    tm tm_1;
+    localtime_s(&tm_1, &login_time);
+    QString local_time = QString::number(tm_1.tm_year + 1900) + "/" + QString::number(tm_1.tm_mon + 1) + "/" + QString::number(tm_1.tm_mday) + "/" + QString::number(tm_1.tm_hour) + ":" + QString::number(tm_1.tm_min) + ":" + QString::number(tm_1.tm_sec);
     user_institution = global_login_institude.toStdString();
     user_career = global_login_career.toStdString();
     user_name = global_login_name.toStdString();
@@ -106,9 +111,14 @@ void Annotation_Tool_Main::init_info() {
     ui.list_log->addItem(QString("User: " + global_login_name));
     ui.list_log->addItem(QString("Institution: " + global_login_institude));
     ui.list_log->addItem(QString("Career: " + global_login_career));
-    write_log(QString("User: " + global_login_name));
-    write_log(QString("Institution: " + global_login_institude));
-    write_log(QString("Career: " + global_login_career));
+    ui.list_log->addItem(QString("Date: " + local_time));
+    if (global_login_name.size() != 0) {
+        write_log(QString("------------------------------------------"));
+        write_log(QString("User: " + global_login_name));
+        write_log(QString("Institution: " + global_login_institude));
+        write_log(QString("Career: " + global_login_career));
+        write_log(QString("Log-in date: " + local_time));
+    }
 }
 
 void Annotation_Tool_Main::load_image() {
@@ -242,6 +252,7 @@ void Annotation_Tool_Main::next_img() {
     else {
         img_count = file_list_len;
         QMessageBox::warning(nullptr, "Warning", "This is the last image.");
+        ui.btn_next->setFocus();
     }
     
 }
@@ -309,7 +320,7 @@ bool Annotation_Tool_Main::eventFilter(QObject* obj, QEvent* event)
                 make_info_txt(user_path, fileName, img_w, img_h, tmp, user_name, user_institution, user_career);
                 ui.list_lbl->clear();
                 bool result = read_info();
-                write_log(QString("Draw Rect, " + fileName + ":" + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
+                write_log(QString("Image " + fileName +  " Draw Rect: " + QString::number(startPoint.x()) + "," + QString::number(startPoint.y()) + "," + QString::number(m_currentRect.width()) + "," + QString::number(m_currentRect.height())));
                 save_xlsx();
                 //save_pixmap_rect(user_path + "\\", fileName.toStdString(), draw_pixmap);
                 QMetaObject::invokeMethod(imageSaver, "savePixmap", Qt::QueuedConnection, Q_ARG(std::string, user_path + "\\"), Q_ARG(std::string, fileName.toStdString()), Q_ARG(QPixmap, draw_pixmap));
@@ -442,7 +453,7 @@ void Annotation_Tool_Main::delete_label() {
         int row = ui.list_lbl->currentRow();
         delete ui.list_lbl->takeItem(row);
         //select_item->setSelected(false);
-        
+        write_log(QString("Delete: " + select));
         change_txt(rect_info, select);
         removeEmptyLines();
         save_xlsx();
@@ -506,9 +517,11 @@ void Annotation_Tool_Main::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
     case Qt::Key_Right:
     case Qt::Key_Space:
+        ui.btn_next->setFocus();
         next_img();
         break;
     case Qt::Key_Left:
+        ui.btn_prev->setFocus();
         prev_img();
         break;
     default:
